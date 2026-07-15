@@ -71,7 +71,7 @@ $$
 - Approach I: Simulation Study
   - Four different data generation processes
   - Four different variable selection mechanisms
-  - Inclusion of two irrelevant and one weak associated variables in the model
+  - Inclusion of two irrelevant variables in the model
 - Approach II: Application to real world data
   - Data from Mozambique
   - Estimation of head count ration and poverty gap based on naive approach vs. proposed solution
@@ -188,13 +188,25 @@ ggarrange(y_normal_low, y_normal_high, y_log, y_boxcox, ncol = 2, nrow = 2)
 
 ```
 
+## Simulation Setup
+
+- $R = 300$ iterations
+
+- $N = 10000$ observations in $D = 50$ domains, sampled via random sample ($n_d \sim Unif(0, 30)$)
+
+- Population-generation and random sampling based on sample size in each iteration, but same for all methods
+
+- Interval for estimating $\lambda$: $\hat{\lambda} \in \{-2, 2\}$
+
+- Bias correction term estimated via bootstrap with $B = 50$ (paper: $B = 200$, slight differences as will be discussed in the term paper)
+
 ## Results: Optimal Lambda's
 
 ```{r}
 #| echo: FALSE
 #| warning: FALSE
 
-load("data/results_replication_R10_z.RData")
+load("data/simulation_study_results_processed.RData")
 res_df <- res_df |> 
   mutate(transformation = case_when(
     transformation == "box.cox"       ~ "Box-Cox (Optimal)",
@@ -243,6 +255,7 @@ kable(t_lambda)
 
 ```{r}
 res_df |> 
+  filter(!is.na(opt_model)) |> 
   group_by(DGP, Transformation) |> 
   ggplot(aes(x = DGP, y = JcAIC, fill = Transformation)) +
   geom_boxplot() +
@@ -253,6 +266,24 @@ res_df |>
        fill = "Variable Selection") +
   scale_fill_brewer(palette = "Set2")
 ```
+
+## Results: JcAIC - zoomed into Normal Settings
+
+```{r}
+res_df |> 
+  filter(!is.na(opt_model)) |> 
+  filter(DGP == "Normal (High)" | DGP == "Normal (Low)") |> 
+  group_by(DGP, Transformation) |> 
+  ggplot(aes(x = DGP, y = JcAIC, fill = Transformation)) +
+  geom_boxplot() +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(x = "Data Generating Process",
+       y = "(J)cAIC",
+       fill = "Variable Selection") +
+  scale_fill_brewer(palette = "Set2")
+```
+
 
 ## Results: JcAIC
 
@@ -275,7 +306,7 @@ kable(t_jcaic_nl)
 ```{r}
 #| echo: FALSE
 t_jcaic_nh <- res_df |> 
-  filter(DGP == "Normal (High)") |> 
+  filter(DGP == "Normal (High)" & !is.na(opt_model)) |> 
   group_by(Transformation) |> 
   summarise(Min = round(min(JcAIC), 2),
             Mean = round(mean(JcAIC), 2),
@@ -319,6 +350,7 @@ kable(t_jcaic_bc)
 ```{r}
 res_df |> 
   mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  filter(!is.na(opt_model)) |> 
   group_by(DGP, Transformation) |> 
   summarise(mean = mean(correct_model)) |> 
   ggplot(aes(x = DGP, y = mean, fill = Transformation)) +
@@ -343,11 +375,12 @@ t_model_nl <- res_df |>
   filter(DGP == "Normal (Low)") |> 
   mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
   group_by(Transformation) |> 
-  summarise(x1 = mean(x1),
-            x2 = mean(x2),
-            x3 = mean(x3),
-            z1 = mean(z1),
-            Correct = mean(correct_model))
+  summarise(x1 = round(mean(x1), 2),
+            x2 = round(mean(x2), 2),
+            x3 = round(mean(x3), 2),
+            z1 = round(mean(z1), 2),
+            z2 = round(mean(z1), 2),
+            Correct = round(mean(correct_model), 2))
 kable(t_model_nl)
 
 ```
@@ -358,14 +391,15 @@ kable(t_model_nl)
 #| echo: FALSE
 
 t_model_nh <- res_df |> 
-  filter(DGP == "Normal (High)") |> 
+  filter(DGP == "Normal (High)" & !is.na(opt_model)) |> 
   mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
   group_by(Transformation) |> 
-  summarise(x1 = mean(x1),
-            x2 = mean(x2),
-            x3 = mean(x3),
-            z1 = mean(z1),
-            Correct = mean(correct_model))
+  summarise(x1 = round(mean(x1), 2),
+            x2 = round(mean(x2), 2),
+            x3 = round(mean(x3), 2),
+            z1 = round(mean(z1), 2),
+            z2 = round(mean(z1), 2),
+            Correct = round(mean(correct_model), 2))
 kable(t_model_nh)
 
 ```
@@ -381,11 +415,12 @@ t_model_nl <- res_df |>
   filter(DGP == "Log") |> 
   mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
   group_by(Transformation) |> 
-  summarise(x1 = mean(x1),
-            x2 = mean(x2),
-            x3 = mean(x3),
-            z1 = mean(z1),
-            Correct = mean(correct_model))
+  summarise(x1 = round(mean(x1), 2),
+            x2 = round(mean(x2), 2),
+            x3 = round(mean(x3), 2),
+            z1 = round(mean(z1), 2),
+            z2 = round(mean(z1), 2),
+            Correct = round(mean(correct_model), 2))
 kable(t_model_nl)
 
 ```
@@ -399,11 +434,12 @@ t_model_nh <- res_df |>
   filter(DGP == "Box Cox") |> 
   mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
   group_by(Transformation) |> 
-  summarise(x1 = mean(x1),
-            x2 = mean(x2),
-            x3 = mean(x3),
-            z1 = mean(z1),
-            Correct = mean(correct_model))
+  summarise(x1 = round(mean(x1), 2),
+            x2 = round(mean(x2), 2),
+            x3 = round(mean(x3), 2),
+            z1 = round(mean(z1), 2),
+            z2 = round(mean(z1), 2),
+            Correct = round(mean(correct_model), 2))
 kable(t_model_nh)
 
 ```
@@ -427,5 +463,3 @@ $$
 Krennmair, P., Würz, N., Schmid, T., & Tzavidis, N. (2026). Random forests and mixed effectsrandom forests for small area estimation of general parameters: A poverty mapping casestudy in mozambique. *Annals of Applied Statistics,20*(1), 809–832.https://doi.org/10.1214/25-AOAS2126
 
 Lee, Y., Rojas-Perilla, N., Runge, M., & Schmid, T. (2023). Variable selection using conditionalAIC for linear mixed models with data-driven transformations. *Statistics and Computing,33*(1), 27.https://doi.org/10.1007/s11222-022-10198-9
-
-Notes: data situation simulation study imitating Mozambique data

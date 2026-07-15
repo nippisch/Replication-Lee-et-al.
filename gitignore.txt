@@ -2,3 +2,5 @@
 .Rhistory
 .Ruserdata
 .DS_Store
+data/simulation_study_results_processed.RData
+data/simulation_study_results_raw.RData

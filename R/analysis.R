@@ -3,6 +3,7 @@
 load("data/test_r4_final_2.RData")
 load("data/replication_R10_z.RData")
 load("data/replication_R10_z_b50.RData")
+load("data/simulation_study_results_raw.RData")
 library(dplyr)
 library(stringr)
 
@@ -15,7 +16,7 @@ res_df <- data.frame(dgp = character(),
                      x3 = numeric(),
                      #x4 = numeric(),
                      z1 = numeric(),
-                     #z2 = numeric(),
+                     z2 = numeric(),
                      opt_lambda = numeric(),
                      JcAIC = numeric(),
                      bc_boot = numeric())
@@ -51,13 +52,18 @@ for (i in 1:length(sim_res_JcAIC)) {
       res_df[obs, "dgp"] <- names(sim_res_JcAIC)[i]
       res_df[obs, "transformation"] <- names(res_dgp)[j]
       res_df[obs, "R"] <- r
+      if(names(res_tmp[1]) == "error") {
+        res_df[obs, c("opt_model", "x1", "x2", "x3", "z1", "z2", "opt_lambda", "JcAIC")] <- NA
+        obs <- obs + 1
+        next
+      }
       res_df[obs, "opt_model"] <- paste0(all.vars(res_tmp$opt_vars[[3]]), collapse = "+")
       res_df[obs, "x1"] <- ifelse(str_detect(res_df[obs, "opt_model"], "x1"), 1, 0)
       res_df[obs, "x2"] <- ifelse(str_detect(res_df[obs, "opt_model"], "x2"), 1, 0)
       res_df[obs, "x3"] <- ifelse(str_detect(res_df[obs, "opt_model"], "x3"), 1, 0)
       #res_df[obs, "x4"] <- ifelse(str_detect(res_df[obs, "opt_model"], "x4"), 1, 0)
       res_df[obs, "z1"] <- ifelse(str_detect(res_df[obs, "opt_model"], "z1"), 1, 0)
-      #res_df[obs, "z2"] <- ifelse(str_detect(res_df[obs, "opt_model"], "z2"), 1, 0)
+      res_df[obs, "z2"] <- ifelse(str_detect(res_df[obs, "opt_model"], "z2"), 1, 0)
       res_df[obs, "opt_lambda"] <- res_tmp$lambdaopt
       res_df[obs, "JcAIC"] <- res_tmp$JcAIC
       
@@ -68,6 +74,8 @@ for (i in 1:length(sim_res_JcAIC)) {
   }
   
 }
+
+save(res_df, file = "data/simulation_study_results_processed.RData")
 
 res_df_b50 <- res_df 
 res_df_b50 |> 

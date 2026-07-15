@@ -1,0 +1,6 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+data/simulation_study_results_raw.RData
+data/results_list_raw.RData
