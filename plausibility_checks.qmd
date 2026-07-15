@@ -1,0 +1,211 @@
+---
+title: "Appendix I: Plausibility Checks for Data Generation"
+author: "Niklas Ippisch"
+format: html
+---
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+library(tidyverse)
+library(ggpubr)
+library(emdi)
+```
+
+
+This document contains several plausibility checks as appendix of the term paper in the course "Advanced Small Area Estimation". The goal of this appendix is to demonstrate the generation of a plausible data set, which will serve as base for the simulation studies conducted in the term paper. The document is inspired by the plausibility check documents supplemented for the paper by Rojas-Perilla et al. (2020).
+
+In the following, data will be generated with the same code as used for the term paper. The only adjustment to the code used there is the saving of the population data, which is skipped in the simulation study.
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+
+N <- 10000 # population size
+D <- 50 # Number of domains
+base_seed <- 123456 # base seed for reproducibility 
+dgp_settings <- c("normal", "log", "boxcox") # data generating processes
+sim_res_sample <- rep(list(vector("list", 1)), length(dgp_settings)) # results list
+sim_res_pop <- rep(list(vector("list", 1)), length(dgp_settings)) # results list
+
+# definition of help functions -------------------------------------------------
+
+# sample function
+sampler <- function(DAT, sample_size, D){
+  
+  # creation of empty dataframe
+  smp <- DAT[0, ]
+  
+  for(d in 1:D){ # loop level 1: iterating over domains
+    
+    # subsetting all observations of domain d
+    domain_rows <- DAT[DAT$domain == d, ]
+    
+    # saving the sample
+    smp <- rbind(smp, domain_rows[sample(nrow(domain_rows), size = sample_size[d]), ], make.row.names = FALSE)
+  }
+  
+  return(smp)
+}
+
+# data generation process function
+dgp <- function(distribution, N, D) {
+  
+  # creating empty dataframe
+  pop_r <- data.frame(id = 1:N)
+  
+  # randomly putting observations in one of the D domains
+  pop_r[, "domain"] <- sample(1:D, size = N, replace = TRUE)
+  
+  # creating covariates constant across data settings
+  pop_r[, "x3"] <- rnorm(n = N, mean = 0, sd = 1)
+  pop_r[, "x4"] <- rbeta(n = N, shape1 = 2, shape2 = 2)
+  pop_r[, "z1"] <- rnorm(n = N, mean = runif(n = 1, min = 95, max = 105), sd = 20)
+  pop_r[, "z2"] <- rbinom(n = N, size = 1, prob = 0.4)
+  
+  if (distribution == "normal") { # if statement 1: normal distribution
+    
+    # creating the covariates, domain effects, and noise
+    pop_r[, "x1"] <- rnorm(n = N, mean = runif(n = 1, min = -3, max = 3), sd = 3)
+    pop_r[, "x2"] <- rbinom(n = N, size = 1, prob = 0.2)
+    
+    u <- rnorm(D, mean = 0, sd = 30)
+    e <- rnorm(N, mean = 0, sd = 60)
+    
+    # creating dependent variable and binding it into data frame
+    pop_r[, "y"] <- 1200 - 10 * pop_r$x1 + 100 * pop_r$x2 - 10 * pop_r$x3 + 0.03 * pop_r$x4 + u[pop_r$domain] + e
+    
+  } else if (distribution == "log") { # if statement 2: log distribution
+    
+    # creating the covariates, domain effects, and noise
+    pop_r[, "x1"] <- rnorm(n = N, mean = runif(n = 1, min = 2, max = 3), sd = 2)
+    pop_r[, "x2"] <- rbinom(n = N, size = 1, prob = 0.8)
+    
+    u <- rnorm(D, mean = 0, sd = 0.4)
+    e <- rnorm(N, mean = 0, sd = 0.8)
+    
+    # creating dependent variable and binding it into data frame
+    pop_r[, "y"] <- exp(10  - pop_r$x1 + pop_r$x2 - 0.5 * pop_r$x3 - 0.03 * pop_r$x4 + u[pop_r$domain] + e)
+    
+  } else if (distribution == "boxcox") { # if statement 3: boxcox
+    
+    # creating the covariates, domain effects, and noise
+    pop_r[, "x1"] <- rnorm(n = N, mean = runif(n = 1, min = 2, max = 3), sd = 2)
+    pop_r[, "x2"] <- rbinom(n = N, size = 1, prob = 0.8)
+    
+    u <- rnorm(D, mean = 0, sd = 0.4)
+    e <- rnorm(N, mean = 0, sd = 0.8)
+    
+    # creating dependent variable and binding it into data frame
+    pop_r[, "y"] <- ((10  - pop_r$x1 + pop_r$x2 - 0.5 * pop_r$x3 - 0.03 * pop_r$x4 + u[pop_r$domain] + e)*(-0.5) + 1)^(1/-0.5)
+  }
+  
+  return(pop_r)
+}
+
+# simulation study -------------------------------------------------------------
+
+r <- 1
+
+for (j in 1:length(dgp_settings)) { # loop level 2: data generating processes
+    
+    # varying but reproducible seed
+    set.seed(base_seed + 10 * r + 10 * j)
+    
+    # generating the population
+    pop_r <- dgp(distribution = dgp_settings[j], N = N, D = D)
+    
+    # defining the sample size, drawing the sample, and saving it
+    sample_size <- round(runif(n = D, min = 0, max = 30))
+    sample_r <- sampler(DAT = pop_r, sample_size = sample_size, D = D)
+    sim_res_sample[[j]] <- sample_r
+    
+    sim_res_pop[[j]] <- pop_r
+    
+  } # end loop level 2
+  
+pop_norm <- sim_res_pop[[1]]
+pop_log <- sim_res_pop[[2]]
+pop_boxcox <- sim_res_pop[[3]]
+
+sample_norm <- sim_res_sample[[1]]
+sample_log <- sim_res_sample[[2]]
+sample_boxcox <- sim_res_sample[[3]]
+```
+
+# Density of dependent variable in population and sample
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+
+dens_normal <- ggplot() +
+  geom_density(data = sample_norm, aes(x = y, fill = "Sample"), alpha = 0.5) +
+  geom_density(data = pop_norm, aes(x = y, fill = "Population"), alpha = 0.5) +
+  labs(title = "Normal Setup",
+       x = "Target variable",
+       y = "Density",
+       fill = "Data Source") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+dens_log <- ggplot() +
+  geom_density(data = sample_log, aes(x = y, fill = "Sample"), alpha = 0.5) +
+  geom_density(data = pop_log, aes(x = y, fill = "Population"), alpha = 0.5) +
+  labs(title = "Log Setup",
+       x = "Target variable",
+       y = "Density",
+       fill = "Data Source") +
+  xlim(0, 25000) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+dens_boxcox <- ggplot() +
+  geom_density(data = sample_boxcox, aes(x = y, fill = "Sample"), alpha = 0.5) +
+  geom_density(data = pop_boxcox, aes(x = y, fill = "Population"), alpha = 0.5) +
+  labs(title = "Box-Cox Setup",
+       x = "Target variable",
+       y = "Density",
+       fill = "Data Source") +
+  xlim(0, 2) +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+ggarrange(dens_normal, dens_log, dens_boxcox, nrow = 3, ncol = 1, common.legend = TRUE)
+
+
+```
+
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+data_ges <- bind_rows(pop_norm, pop_log, pop_boxcox,
+                      sample_norm, sample_log, sample_boxcox, 
+                      .id = "data_source")
+
+data_ges |> 
+  mutate(source = if_else(data_source < 4, "population", "sample")) |> 
+  group_by(source, data_source) |> 
+  summarise(mean = mean(y)) 
+```
+
+# Fitted EBP and Diagnostics
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+ebp_norm <- ebp(y ~ x1 + x2, pop_data = pop_norm, pop_domains = "domain",
+             smp_data = sample_norm, smp_domains = "domain", L = 50, 
+             transformation = "box.cox")
+summary(ebp_norm)
+```
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+plot(ebp_norm)
+```
+
+
+

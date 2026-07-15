@@ -1,0 +1,234 @@
+---
+title: "Apples and pears? Impacts of using the Jacobian scaled conditional Akaike Information Criteria for model selection in linear mixed models. "
+subtitle: "Advanced Small Area Estimation (Prof. Schmid)"
+date: "09.13.2026"
+author: "Niklas Ippisch"
+format: pdf
+toc: TRUE
+number-sections: true
+csl: apa
+bibliography: references.bib
+---
+
+{{< pagebreak >}}
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+
+library(tidyverse)
+library(ggpubr)
+```
+
+
+# Introduction
+
+# Theoretical Background
+
+The term paper moves in the context of a classical linear mixed model, defined as
+
+$$\begin{align}
+y_i = X_i\beta + Z_iu_i + \epsilon_i
+\end{align}$$
+
+with $y$ being the dependent variable, $i = 1, ..., D$ indexing the respective area $D$ as well as design matrices $X$ and $Z$. $\beta$ indicates a vector of coefficients, later to be estimated with the model, and $u$ is a vector of area-level random effects. Lastly, $\epsilon$ is a vector of area-level errors. Importantly, $u$ and $\epsilon$ are assumed to be independent and normally distributed with $u \sim N(0, G)$ and $\epsilon \sim N(0, \sigma^2I_{N_i})$ respectively.
+
+The present term paper mainly relies on the approach proposed by Lee et al. [-@lee2023], which, therefore, will be outlined in detail in the following.
+
+## Problem and Status Quo
+
+The starting point is a conditional Akaike Information Criteria ($cAIC$), as described by Vaida & Blanchard [-@vaida2005]. This measures the K-L divergence between the true model density $f(\cdot|\theta, u)$ and the conditional density of a model candidate $g(y|\hat{\theta}, \hat{u})$ and is defined as
+
+$$\begin{align}
+cAIC = -2log(g(y|\hat{\theta}, \hat{u}) + 2K.
+\end{align}$$
+
+$K$ is a bias correction term; different versions have been proposed, but due to computational costs and closer approximation under realistic assumptions, $K_{MLE}$ as developed by Vaida & Blanchard [-@vaida2005] is used for the present term paper, following Lee et al. [-@lee2023]. The term is defined as
+
+$$\begin{align}
+K_{MLE} = \frac{N(N - p - 1)}{(N -p)(N - p - 2)}(\rho + 1) + \frac{N(p+1)}{(N - p)(N - p - 2)}.
+\end{align}$$
+
+The problem is, however, that the proposed model selection criterion is not scale invariant. That means, if the dependent variable $y$ changes, e.g., due to a transformation, the $cAIC$ for different models cannot be compared with each other for variable selection. The problem especially gets serious if not a fixed transformation (e.g., a log transformation) is applied but a data driven transformation which changes based on the covariates included. One of those data driven transformations often applied in research is the Box-Cox transformation [@box1964]. It contains a parameter $\lambda$ which can be estimated to maximize the likelihood. The box-cox transformation is defined as
+
+$$T_\lambda(y_{ij}) = \tilde{y} =
+\begin{cases}
+  \frac{(y_{ij} + s)^\lambda - 1}{\lambda}   & \text{if } \lambda \neq 0 \\
+  log(y_{ij} + s)    & \text{if } \lambda = 0
+\end{cases}, i = 1, ..., D \text{ and } j = 1, ..., N_i$$
+
+Instead of the model above, using the transformation the following model is estimated: $T_\lambda(y) = \tilde{y} = X\beta + Zu + \epsilon$. Using this model instead, the goal is to get normally distributed random effects and residuals - two crucial assumptions of the linear mixed model.
+
+## Proposed Solution by Lee et al. (2023)
+
+The key idea of Lee et al. [-@lee2023] is now to scale the $cAIC$ proposed above by the Jacobian matrix in order to account for the difference in scales; correcting with the Jacobian ensures that models with differently transformed response variables $\tilde{y}$ are comparable. The Jacobian of the Box-Cox transformation is defined as
+
+$$\begin{align}
+J(\lambda, y) = \prod^D_{i = 1} \prod^{N_i}_{j = 1} \frac{\partial \tilde{y}_{ij}}{\partial y_{ij}} = \prod^D_{i = 1} \prod^{N_i}_{j = 1} (y_{ij} + s)^{\lambda - 1}.
+\end{align}$$
+
+Using this definition of the Jacobian, the true conditional density $h(y|u_0)$ and conditional model density $l(y|\theta, u)$ can be reforumlated as
+
+$$\begin{align}
+h(y|u_0) = f(\tilde{y}|u_0) \cdot J(\lambda, y) \\
+l(y|\theta, u) = g(\tilde{y}| \theta, u) \cdot J(\lambda, y)
+\end{align}$$
+
+The K-L-distance between those two densities can now be calculated. After some mathematical transformations[^1], the final representation of the $JcAIC$ looks like the following:
+
+[^1]: For the calculation steps to arrive at formula (X) please refer to Lee et al. [-@lee2023].
+
+$$\begin{align}
+JcAIC = -2log(l(y|\hat{\theta}, \hat{u})) + 2BC = -2log(g(\tilde{y}|\hat{\theta}, \hat{u})) - 2log(J(\hat{\theta}, y)) + 2BC
+\end{align}$$
+
+For the conditional model density, estimates of $\theta$ and $u$ are used. Using formula (x) from above and the estimates yields the second expression in formula (X). $BC$ is a bias correction term as $-2log(l(y|\hat{\theta}, \hat{u}))$ is a biased estimator of $0.5 \cdot JcAIC$. The bias correction term is defined as
+
+$$\begin{align}
+BC = E_{h(y, u)}[log(l(y|\hat{\theta}, \hat{u}))] - E_{h(y, u)}E_{h(y^*|u)}[log(l(y^*|\hat{\theta}, \hat{u}))]
+\end{align}$$
+
+Due to computational complexity, the bias expectational values in the bias correction are estimated using a bootstrap with the following structure:
+
+1.  For a model candidate, estimate $\hat{\lambda}$ and transform $y$ to $\tilde{y}$ using $\hat{\lambda}$.
+
+2.  Fit the linear mixed model on the transformed response variable $\tilde{y}$. This step yields parameter estimates $\hat{\theta}$.
+
+3.  Based on the estimated parameter of step two, generate $u^{(b)} \sim N(0, \hat{G}_0) \text{ and } \epsilon^{(b)} \sim N(0, \hat{\sigma}^2)$. Using those draws, generate a bootstrap sample using $\tilde{y}^{(b)} = X\hat{\beta} + Zu^{(b)} + \epsilon^{(b)}$.
+
+4.  Estimate the bootstrap estimates of the parameters $\hat{\theta}^{(b)} \text{ and } \hat{u}^{(b)}$ based on the bootstrap sample $\tilde{y}^{(b)}$ from step three.
+
+5.  For the second expectation term of the $BC$, calculate that using $\hat{\theta}^{(b)} \text{ and } \hat{u}^{(b)}$. $\tilde{y}^*$ and $y^*$ are replaced by $\tilde{y}$ and $y$ respectively.
+
+6.  For the first expectation term, back-transform $\tilde{y}^{(b)}$ using $\hat{\lambda}$ to obtain $y^{(b)}$. Re-estimate $\hat{\lambda}^{(b)}$ and re-transform $y^{(b)}$ to obtain $\tilde{y}^{(\hat{\lambda}^{(b)}, (b))}$.
+
+7.  Refit the model on $\tilde{y}^{(\hat{\lambda}^{(b)}, (b))}$ to obtain $\hat{\theta}^{(\hat{\lambda}^{(b)}, (b))}$ and $\hat{u}^{(\hat{\lambda}^{(b)}, (b))}$.
+
+8.  The first expectation term of the $BC$ can now be calculated using $\hat{\theta}^{(\hat{\lambda}^{(b)}, (b))}$, $\hat{u}^{(\hat{\lambda}^{(b)}, (b))}$, $\tilde{y}^{(\hat{\lambda}^{(b)}, (b))}$, $\hat{\lambda}^{(b)}$, and $y^{(b)}$.
+
+Using the estimated values from above, the bootstrap estimate of the bias correction term $BC$ is calculated as
+
+$$\begin{align}
+BC &= \frac{1}{B} \sum^B_{b = 1} \biggl[ -\frac{N}{2}log(2\pi\hat{\sigma}^{2^{(\hat{\lambda}^{(b)}, (b))}})-\frac{1}{2\hat{\sigma}^{2^{(\hat{\lambda}^{(b)}, (b))}}} \cdot  \left( \tilde{y}^{(\hat{\lambda}^{(b)}, (b))}  - X\hat{\beta}^{(\hat{\lambda}^{(b)}, (b))} - Z\hat{u}^{(\hat{\lambda}^{(b)}, (b))}  \right)^T  \nonumber \\ 
+&\quad \left( \tilde{y}^{(\hat{\lambda}^{(b)}, (b))}  - X\hat{\beta}^{(\hat{\lambda}^{(b)}, (b))} - Z\hat{u}^{(\hat{\lambda}^{(b)}, (b))}  \right) + (\hat{\lambda}^{(b)}-1) \sum^D_{i=1} \sum^{N_i}_{j=1} log(y^{(b)}_{ij} + s) \biggl] \nonumber \\ 
+&\quad - \frac{1}{B} \sum^B_{b = 1} \biggl[ -\frac{N}{2} log(2\pi\hat{\sigma}^{2^{(b)}}) - \frac{1}{2\hat{\sigma}^{2^{(b)}}} \cdot \biggl(\tilde{y} - X\hat{\beta}^{(b)} - Z\hat{u}^{(b)} \biggr)^T \nonumber \\
+&\quad \biggl(\tilde{y} - X\hat{\beta}^{(b)} - Z\hat{u}^{(b)} \biggr) + (\hat{\lambda} - 1) \sum^D_{i=1} \sum^{N_i}_{j=1} log(y_{ij} + s) \biggr]
+\end{align}$$
+
+The whole workflow using the measures proposed above can be summarized like the following:
+
+1)  Starting point is a full model with all $P$ covariates. Estimate $\hat{\lambda}$ for this, initial optimal, model.
+
+2)  For each step $s = 1, ..., S$:
+
+    i)  Take into consideration all model candidates with one covariate less than the model before.
+
+    ii) For every candidate, estimate $\hat{\lambda}$ and calculate the $JcAIC$ with the estimated $\hat{\lambda}$ and transformed $\tilde{y}$.
+
+    iii) Choose the model with the lowest $JcAIC$ as optimal model for this step. Start again with i).
+
+3)  As soon as no lower $JcAIC$ can be identified in iii), this model is seen as optimal model.
+
+# Data and Methods
+
+In the following, two applications will be described, both of which aim to illustrate the usage of the procedure outlined above. First, a simulation study will be conducted. This ensures code functionality and aims to reproduce the results from Lee et al. [-@lee2023] with slight adjustments[^2]. Afterwards, an application on a real world data set will be conducted. The proposed procedure will be applied to data from Mozambique as Krennmair et al. [-@krennmair2026] did. Applying the linear mixed model to this data also enables a comparison with the results of Krennmair et al. [-@krennmair2026], who applied machine learning model for the estimation of the head count ratio and poverty gap. In the following two sections, the setup of the simulation study as well as the data from Mozambique will be introduced.
+
+[^2]: The exact replication of the results by @lee2023 can be found in Appendix II.
+
+## Simulation Study
+
+Similar as Lee et al. [-@lee2023], four variable selection methods will be compared based on four different data generation processes.
+
+### Data Generation Processes
+
+The four different data generation processes stem from three different distributions. First, as comparison and benchmark setting, a normal distribution for the dependent variable $y$ will be used ("Normal (High)"). As first comparison, a normal distribution with considerably higher variances for the distributions of error terms $\epsilon$ and $u$ will be used ("Normal (Low)"). Normal distributions, however, are not necessarily the most accurate scenario for modeling income data (which is often the target of small area estimation). Therefore, the log distribution will be used ("Log") as well as a box-cox distribution ("Box-Cox"). For all scenarios, the three independent variables are drawn from a normal ($x_1, x_3$) or binomial ($x_2$) distribution and both, $u$ and $\epsilon$ are drawn from normal distributions. The data generation processes are summarized in @tbl-dgp. The data generation processes for $x_{2, ij}$ ($Bin(1, 0.8)$) and $x_{3, ij}$ ($N(0, 1)$) were the same for all settings.
+
+| Data setting | $y_{ij}$ | $x_{1, ij}$ | $\mu_i$  | $u_{ij}$ | $e_{ij}$
+|----------|------------------|--------| --------| -------- | --------|
+| Normal (Low) | $400-10x_{1, ij} + 100x_{2, ij} - 10x_{3, ij} + u_i + e_{ij}$  | $N(\mu_i, 3^2)$ | $U[-3, 3]$ | $N(0, 30^2)$ | $N(0, 60^2)$ |
+| Normal (High) | $400-10x_{1, ij} + 100x_{2, ij} - 10x_{3, ij} + u_i + e_{ij}$  | $N(\mu_i, 3^2)$ | $U[-3, 3]$ | $N(0, 10^2)$ | $N(0, 20^2)$ |
+| Log | $exp\{10-x_{1, ij} + x_{2, ij} - 0.5x_{3, ij} + u_i + e_{ij}\}$  | $N(\mu_i, 2^2)$ | $U[2, 3]$ | $N(0, 0.4^2)$ | $N(0, 0.8^2)$ |
+| Box-Cox | $[(10-x_{1, ij} + x_{2, ij} - 0.5x_{3, ij} + u_i + e_{ij})\cdot(-0.5)+1]^{\frac{1}{-0.5}}$  | $N(\mu_i, 2^2)$ | $U[2, 3]$ | $N(0, 0.4^2)$ | $N(0, 0.8^2)$|
+
+: Situations for data generating process, $i = 1, ..., D$ and $j = 1, ..., N_i$ {#tbl: dgp}
+
+Figure X presents histograms of the four data generation processes of the first monte carlo iteration.
+
+```{r}
+#| echo: FALSE
+load("data/dgps_R1.RData")
+pop_normal_low <- sim_res_pop[["normal_low"]][[1]]
+pop_normal_high <-sim_res_pop[["normal_high"]][[1]]
+pop_log <- sim_res_pop[["log"]][[1]]
+pop_boxcox <- sim_res_pop[["boxcox"]][[1]]
+
+y_normal_low <- pop_normal_low |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_normal_low$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Normal_Low Scenario",
+       caption = "Blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_normal_high <- pop_normal_high |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_normal_high$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Normal_High Scenario",
+       caption = "Blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_log <- pop_log |> 
+  filter(y < 50000) |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_log$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Log-Scenario",
+       caption = "Data tructuated due to visibility, y < 50,000; \n blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_boxcox <- pop_boxcox |> 
+  filter(y < 1) |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_boxcox$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Box-Cox-Scenario",
+       caption = "Data tructuated due to visibility, y < 1; \n blue line indicates median",
+       x = "Target Variable",
+       y = "")
+
+ggarrange(y_normal_low, y_normal_high, y_log, y_boxcox, ncol = 2, nrow = 2)
+
+```
+
+
+### Compared Methods
+
+In total, four different variable selection methods will be compared based on the data generation processes outlined above. First, as a benchmark, a stepwise variable selection based on the $cAIC$ without applying a transformation on the dependent variable $y$ will be conducted ($T_\lambda(y_{ij}) = y_{ij}$). The second method is again a stepwise variable selection, but after the dependent variable was log-transformed ($T_\lambda(y_{ij}) = log(y_{ij})$). As third scenario, a data driven box-cox transformation as defined above will be used for transforming $y$, but after the stepwise variable selection was conducted on the original scale. Lastly, the above proposed process, stepwise variable selection but based on the $JcAIC$, will be used.
+
+For the data generating processes Normal (High) and Normal (Low) it is expected that the first method (stepwise variable selection withtout transformations) will outperform the other approaches as no transformation is necessary prior to the variable selection. Regarding the Log scenario, the optimal transformation parameter $\lambda$ is expected to be approximately 0, which would be approximately equal to a static log transformation. Subject of the analysis will be here to what extent the variable selection before the transformation differs from the sequential one proposed by @lee2023. Lastly, for the box-cox data generation process, the data driven transformation are expected to outperform the static transformations. Regarding the comparison between methods three and four, the analysis will focus both on changes in estimated $\lambda$ and on the variables selected.
+
+Why the distribution in constructing the y and not in the error term like in Rojas-Perilla et al. (2020)!?
+Do I want that sampling (and sample size) vary from iteration to iteration, even from distribution to distribution within one iteration?
+
+## Application: Mozambique data
+
+# Results
+
+## Results of Simulation Study
+
+## Results of Application
+
+# Discussion
+
+{{< pagebreak >}}
+
+# References
+
+# Appendix I: Plausibility Checks for Data Generation Processes
+
+# Appendix II: Exact replication of results by Lee et al. (2023)

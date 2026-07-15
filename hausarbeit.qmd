@@ -1,0 +1,532 @@
+---
+title: "(De-)Colonial terms? Analysis of scientific coverage about African countries from a decolonial perspective"
+subtitle: "Term paper for the course (15204) Quantitative Research Practicum - Data Collection (CSS) in WiSe 24/25 (Dr. Topinkova)"
+author: "Niklas Ippisch"
+date: "03.04.2025"
+format: pdf
+editor: source
+toc: true
+number-sections: true
+bibliography: references.bib
+zotero: "Research_Practicum_CSS"
+csl: apa
+---
+
+{{< pagebreak >}}
+
+# Introduction
+
+Over the last decade, interest in the decolonial[^1] perspective has increased among researchers. The decolonial analysis starts with the "hubris of the zero point" [@mignolo2009, p. 160] or "point zero" [@grosfoguel2007, p. 214]. The authors argue that early philosophers (e.g., Descartes) constructed this idea, asserting that objectivity is essential for 'good' knowledge. Objectivity can only be achieved if the analyst removes themselves from the process [@mignolo2021]. Consequently, the "‘point zero’ is the point of view that hides and conceals itself as being beyond a particular point of view, that is, the point of view that represents itself as being without a point of view" [@grosfoguel2007, p. 214]. Notably, this is a construction of 'Western'[^2] man (masculine form intended), assert that it is the sole means of obtaining objective and reliable knowledge. During colonization, this construct was also imposed on the colonies, where local knowledge production was discredited and seen as unable to yield objective results [@grosfoguel2007]. Scholars argue that this Eurocentrism persists, reinforcing a superior-inferior relationship between 'Western' and 'Non-Western' scholars [@afolabi2022].
+
+[^1]: There is a still ongoing discussion about how to define decolonialism and how to differentiate it from post-colonialism, which yielded no distinct definition yet [see e.g., @bhambra2014; @colpani2022]. Since that does not make a difference for the present argumentation about the epistemic hierarchy, the discussion is no topic of the present paper.
+
+[^2]: There exists no overall accepted definition of 'Western', 'Northern', or 'European', which are often times used synonymous in literature. For the present paper, a concept of 'Western' is used which seems to be most of the times the implicit assumption of the research, too: 'Western' refers to capitalistic and white-male-dominated countries in central and Western Europe as well as North America. To stress the fact that the term is an ascription, it is always written in single quotes and with a capital letter.
+
+The consequence is claimed to be a "locus of enunciation, that is, the geo-political and body-political location of the subject that speaks" [@grosfoguel2007, p. 213]. There are two implications resulting out of that statement: First, it does make a difference where knowledge is produced and secondly, all knowledge production is ordered in a superior-inferior relationship constructed by the 'West'. Therefore, 'Western' writing about 'Non-Western' countries differs from 'Non-Western' writing about themselves [@hountondji2009].
+
+To date, the decolonial perspective has been primarily applied to the analysis of globalization and it's impact on the local culture [e.g., @afolabi2022; @fúnez-flores2023]. Despite being an epistemic concept, no literature applies this perspective on the question, to what extent and why 'Non-Western' scholars are under-represented in (social) sciences. On the other hand, studies on underrepresentation argue for richer insights and improved results [e.g., @amarante2022] and lack the power dimension in the analysis.
+
+Against this theoretical background, the present term paper aims to analyze to what extent these hierarchies and power relations are present in scientific research about African countries. The next section outlines relevant research findings and the research hypotheses. Afterwards, the data and methods are described, and finally, the analysis results are presented. The term paper ends with a conclusion and discussion of the limitations.
+
+# Theoretical Background
+
+The implicit assumption of this term paper and most of the research cited is that even scientific facts are socially constructed [see e.g. @latour1986]. The connected claim is firstly that it does make a difference who researches a topic for how it is covered and secondly that semantic differences in how a topic is covered exist. In the following, I will present scientific evidence on the two claims and outline the research hypotheses.
+
+## Representation of Africa in (social) sciences
+
+Scientific research about the representation of Africa and it's countries is limited and highly heterogeneous. Among existing literature, two strings can be identified: On the one hand, there is a growing body of research focusing on *who* writes about 'Non-Western' countries. On the other hand, a smaller community analyzed *how* different media cover topics on 'Non-Western' countries. Both strings will be summarized in the following.
+
+There exists broad empirical evidence for different disciplines and sub-disciplines that 'Western' researchers publish more articles in journals than 'Non-Western' [e.g., @tijssen2007; @mosbah-natanson2014; @amarante2022]. In that context, collaborations play a crucial role: Next to fewer research from African countries, studies reveal a rise in international collaborations [e.g., @tijssen2007; @amarante2022], which are also found to increase the number of citations [@sooryamoorthy2009]. Moreover, even though the amount of published articles in South Africa rose, the mean number of citations shrank significantly over time (ibid.). For development journals, Amarante and colleagues [-@amarante2022] find the same pattern of less citations for articles from 'Southern' regions and even higher rates of rejection during the review process. Interestingly, also papers from 'periphery' regions show the same over-representation of 'Western' articles in their citations [@mosbah-natanson2014]. These patterns seem to be in place already in scholar education: Schucan & Pitman [-@schucanbird2020] show for university students in London that "the university reading lists \[....\] are dominated by white, male and Eurocentric authors" (p. 911). Regarding the institutional affiliations, Mbaye and colleagues [-@mbaye2019] found that the vast majority of articles focusing on disease research in Africa were written by at least one African scholar, however, they were significantly less often first or last author. Moreover, they found that if an African scholar was first or last author, they were most likely affiliated with a 'Western' university of organization [@mbaye2019]. There exists also some evidence that 'Non-Western' scholars are underrepresented in editorial board membership [@cummings2017; @chelwa2021].
+
+The language barrier alone, i.e., the fact that 'Non-Western' scholars are not native speakers and are therefore disadvantaged in English-language journals, does not fully explain the observed pattern [@hyland2016]. Mosbah-Natanson and Gingras [-@mosbah-natanson2014] suggest a globalization of social sciences which, however, does not lead to more equal citations and publications but to a "phagocytosis of the periphery into the two major centers" [@mosbah-natanson2014, p. 15]. The authors use the metaphor from biology to describe an involuntary incorporation of 'Non-Western' science, "which brings with it the danger of losing interest in the local objects specific to those peripheral countries" [@mosbah-natanson2014, p. 15]. Even though the authors do not describe the mechanisms in detail, they point towards a possible loss as consequence of centering academic work around 'Western' scholars and institutions. Studies focusing on globalization itself show that globalization has big impacts on the culture, especially of 'Non-Western' countries and often leads to losses regarding the local culture [@yankuzo2013].
+
+In addition to research on *who* writes about African countries, some studies examine *how* the media (especially news papers) portray them. In a scoping review, Scott [-@scott2017] analyzes 163 studies researching the coverage of African countries in media. He finds a rising number of studies over time, however with big differences in what regions of Africa are researched. Due to the focus on a few countries and almost solely on newspaper, he criticizes the possibility to draw general conclusions about the coverage out of a non-representative sample. Nothias [-@nothias2018], in a reaction to Scott's critique, analyzes French and British newspaper articles and finds no support for his hypotheses but an interesting pattern in the lexical fields: 55% of the analyzed articles contained lexical fields referring to "social & political instability", 49% to "violence and death", 38% to "corruption" and 34% to "poverty" [@nothias2018, p. 1146]. Lexical fields like "progress & achievements" (21%), "good governance" (13%) and "economic growth" (13%) were found less frequent (ibid.). Moreover, Nothias finds that most articles (73%) refer to Africa as a general and 47% of articles "contain cases of conflation" [@nothias2018, p. 1148], whereas just 33% of the articles decidedly mention Africa as a continent.
+
+Two key aspects emerge when examining the scientific landscape: First, there exists research on how African countries are covered in media. However, no research focusing on how African countries are represented in scientific research could be found. Secondly, both research and media often does not clearly divide between 'African' and 'Non-Western' countries. Overall, there is a difference visible in how much different parts of the 'Non-Western' world is covered and analyzed.
+
+## Research hypotheses {#sec-hypo}
+
+As outlined above, there is a growing scientific interest and amount of empirical data which focuses on differences in publication patterns and media representation. At the same time, a theoretical framework establishes an epistemic hierarchy between 'Western' and 'Non-Western' knowledge production, stemming from colonial relations. That might impact the scientific landscape in two sides: On the one hand, there might be a difference in how different African countries are addressed (leading to hypothesis 1). On the other hand, there might exist an epistemic hierarchy in scientific research about African countries which may be reflected semantically (leading to hypothesis 2a). With the rising importance of de- and postcolonial positions over the last decade, this semantic pattern presumably got smaller over the time (leading to hypothesis 2b).
+
+The present paper aims to make two contributions: First, it aims to bridge research and theoretical concepts. Up to now, no "colonial" or "decolonial" terms are set and decolonial scholars rarely use examples - it is rather an impression guiding the analysis and critique. The present paper aims to contribute to that by exploring frequently used terms and trying to identify patterns and key terms for one side or the other. Second, it aims to broaden the view: Most of the research to date focuses either on Africa in general or on different sub-disciplines. Hence, differences in representation will be researched by all African countries and over time with the following hypotheses:
+
+1\) There exists a difference in how different African countries are addressed in scientific research.
+
+2a) There exists a semantic difference in how African countries are addressed over time representing an epistemic hierarchy.
+
+2b) This semantic difference decreased over time.
+
+# Methods
+
+## Data
+
+```{r}
+#| message: false
+#| warning: false
+#| include: false
+#| echo: false
+# Preperation: importing data and loading necessary packages
+
+library(tidyverse)
+library(stringr)
+library(quanteda)
+library(quanteda.textstats)
+library(stargazer)
+library(cowplot)
+library(knitr)
+library(ggrepel)
+library(kableExtra)
+load("preprocessing_export.RData")
+```
+
+The data were extracted through the SPRINGER Meta API [@springernature2025]. The API is free of charge and provides metadata for millions of scientific articles published in many different journals. The main subject of the study is the abstracts of the articles. They are used because for many articles (especially older ones) the full text is not available at all or not free of charge. Using abstracts also reduces the size of the data significantly. Since the abstracts are supposed to contain the most important aspects of an article it can be assumed that here key terms are mentioned and a semantic pattern would be visible, too.
+
+Abstracts were extracted for all 54 countries and the search query "Africa". In order to be able to observe patterns over time, abstracts in the last 30 years were extracted in a two year rhythm in order to reduce the amount of data (i.e. 1994, 1996, 1998, ..., 2022, 2024). Per country and year, three queries of 25 results were performed. Overall, this leads to
+
+$$
+55 \text{ countries } \cdot 15 \text{ years } \cdot 3 \text{ queries } \cdot 25 \text{ results } = 61,875 \text{ observations.}
+$$
+
+```{r}
+#| echo: false
+#| label: tbl-failed_queries
+#| tbl-cap: "Observations for countries where queries failed due to empty searches (max. possible = 1,125)."
+
+dataframe_raw |> 
+  group_by(country) |> 
+  summarise(n = n()) |> 
+  filter(n < 1125) |> 
+  arrange(n) |> 
+  kable()
+```
+
+Surprisingly, some of the queries failed due to empty search results (see @tbl-failed_queries), i.e. less than 75 articles were found for a combination of country and year. Additionally, observations without an abstract were removed yielding `{r} nrow(dataframe_raw)` observations. Importantly, articles appearing more than once in the data need to be excluded to ensure that every article has the same weight in the analysis. After removing multiple entries, `{r} nrow(dataframe)` remained. The range of observations per country varies considerably after removing multiple entries. @tbl-country_fewest shows the countries with the most and least observations in the data (a full table is visible in @sec-app_a). The distribution of the countries, i.e. which country has how many articles, cannot be interpreted since it is an artifact of the filtering method: Duplicates were removed from top to bottom, i.e. alphabetically. Thus, it is not surprising that countries like 'Africa', 'Algeria' and 'Angola' have the most articles, whereas 'Zimbabwe' and 'Zambia' are among the fewest. Unfortunately, the API does not allow control over which articles are pulled or prevent duplicates. Consequently, this skewed data frame is used for the following analysis, however, when interpreting the results that fact is important to keep in mind.
+
+```{r}
+#| echo: false
+#| label: tbl-country_fewest
+#| tbl-cap: "10 Countries with the fewest number of observations after removing NA's (max. possible: 1,125)."
+
+dataframe |>
+  group_by(country) |> 
+  summarise(n = n()) |> 
+  arrange(n) |> 
+  filter(n < 170 | n > 850) |> 
+  kable()
+```
+
+It is also visible that the number of observations per year remains rather constant, avoiding a temporary bias (see @fig-publicationstime).
+
+```{r}
+#| echo: false
+#| label: fig-publicationstime
+#| fig-cap: "Number of observations in the data per year"
+
+dataframe |> 
+  arrange(year) |> 
+  ggplot(aes(x = year)) +
+  geom_bar() +
+  labs(x = "Year", y = "Number of observations") +
+  scale_x_continuous(breaks = seq(1996, 2024, by = 4))
+```
+
+## Methods
+
+Regarding the methods, the present paper is a replication study of the paper by Schwemmer and Wieczorek [-@schwemmer2020], that is using the same methods on different data. For determining the key terms per country in the sample, also $\chi^2$-independence tests are used, performed with the `quanteda.textstats` package [@benoit2018]. Here, keyness is calculated, which refers to a measure of how often a term appears in a document. The comparison group thereby are all other documents. In the present paper, documents are grouped by countries, i.e. for country X all other countries are the reference group.
+
+In order to assess semantic differences, the present paper also relies on the wordfish model, originally proposed by Slapin and Proksch [-@slapin2008] for assessing political manifestos. Wordfish uses "a Poisson naïve Bayes model" (ibid., p. 709) to estimate word frequencies in text documents. Hence, the model specification looks like this:
+
+$$
+y_{ijt} \sim Poisson(\lambda_{ijt})
+$$
+
+$$
+\text{with } \hspace{0,5cm} \lambda_{ijt} = exp(\alpha_{ijt} + \psi_{ijt} + \beta_{ijt} \cdot \theta_{ijt})
+$$
+
+Applied to the present use-case, $y$ denotes the number of times word $j$ is mentioned in an abstract connected to country $i$ in year $t$ and is drawn from a Poisson distribution. $\alpha$ is a fixed effect on a document level and corrects for the fact that some abstracts are longer than others and $\psi$ is a fixed effect on a word level since some words are used more often than others. $\beta$ "is an estimate of a word specific weight capturing the importance of word $j$ in discriminating between \[...\] positions" [@slapin2008, p. 709] and $\theta$ is the estimation of the position of the whole abstract on the dimension. The parameters are estimated stepwise by maximum likelihood estimation conditional on the expectation of the latent variable (ibid.).
+
+Two important assumptions need to be reflected when using the wordfish model: First, the model assumes word meanings are constant over time [@slapin2008]. This assumption is necessary since either the researcher would need to define a priori which words changed or the model would be unidentified if all words are allowed to change over time. Second, the model assumes that the documents can be arranged on a single dimension. This dimension is explored by the unsupervised machine learning algorithm itself and cannot be determined beforehand. Thus, it is important that all documents include the dimension. For the present paper, the dimension is assumed to be one of more or less decolonial semantic. On the one hand  terms, which refer to a hierarchy (e.g. underdeveloped, poor, tribes) are expected, whereas on the other side terms not doing that (e.g. developed, advanced) are expected. To prevent the model from capturing a dimension within a scientific subject no specific subjects were in- or excluded with the data acquisition. Rather, it is assumed that semantics changed over time (especially since the rise of decolonial thought from approximately 2010 onward) and over countries (with some countries rather seen as equal trade partner and some rather as possibility to gather resources). Most importantly, the results of the model need to be validated qualitatively afterwards [@slapin2008].
+
+Before the analysis, preprocessing the data is important to ensure no model distractions and to reduce the computational effort. There is a broad discussion about preprocessing, what methods to use and how they might affect the results [@chai2023; @denny2017]. The following illustration of the preprocessing steps taken for the present paper is inspired by the list of Denny and Spirling [-@denny2017]. Regarding punctuation, all non-letter characters were removed since they are assumed to have no semantic contribution (in contrary e.g. to an analysis of tweets with #). Symbols like \< or = might indicate quantitative research results, however, since the research results are not analyzed, they would likely just disturb the wordfish model. The same argument applies for numbers, which were removed as well. Lowercasing is also applied to the tokens in order to avoid that words standing at the beginning of a sentence (with an upper-case) are not treated the same as words with a lower-case. The examples when to not use lowercasing do not apply here (e.g. difference in 'rose' as flower and 'Rose' as name). Due to the large amount of data, stemming is also applied, even though this might result in some meanings and differences being lost. The same argument applies to stopwords, which were removed as well. Since many abstracts contain French and German versions, the stopword lists for both languages, along with the English stopword list from `quanteda` [@benoit2018] are used. Further filtering for French terms does not seem feasible: Articles, which are labeled French mostly contain an English version of the abstract and many articles, labeled as English also have an French abstract. A complete removal of all French terms was not applied due to many words in French being present in English as well. Since French abstracts are still relatively rare, they might also be removed with the next step: Removal of infrequently used terms. To reduce the computational effort with losing a long tail in the word distribution, terms appearing in more than 25% or less than 65 abstracts were removed. Such a low boundary is chosen since the search country with the fewest observations (South Africa) has just 104 entries in the data. Lastly, n-grams or collocations can be considered, too. Since many terms form a semantically different meaning, collocations were extracted and added to the data corpus. These decisions, except for the French and German words, are also in line with the methodical considerations of Schwemmer and Wieczorek [-@schwemmer2020], making a replication possible.
+
+Importantly, there are also a few ethical aspects which need to be considered. First, the data might be misused for author-shaming, e.g. by reporting author names who primarily produced texts on the hierarchy-side of the continuum. That is not the goal for the present paper; it is an analytical and no normative paper and thus author relations will not be analyzed. Second, one might argue that it is not in the spirit of decolonialism that another white, European author writes about Africa. However, the present paper does not intend to write about African countries and peoples, their lives and problems but aims to be an analysis of the scientific landscape.
+
+# Results
+
+```{r}
+#| echo: false
+#| label: fig-numberjournals
+#| fig-cap: "The 15 journals with the most observations in the data."
+
+dataframe |> 
+  group_by(publicationName) |> 
+  summarise(n = n()) |> 
+  arrange(desc(n)) |> 
+  slice(1:15) |> 
+  ggplot(aes(x = n, y = reorder(publicationName, n))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Number of observations per journal", y = "Journal")
+```
+
+In total, there are `{r} n_distinct(dataframe$publicationName)` different journals in the data. @fig-numberjournals shows the 15 journals with the most observations. Among them, a big focus on the local flora and fauna is visible. Moreover, there are multiple journals with a strong focus on (infectious) diseases, which already points towards a possible negativity bias in scientific writing about African countries, which will be explored in more detail in the following. As outlined above, the results need to be interpreted in the light of a skewed distribution of articles in the data. Regarding key terms in @sec-diff, the distribution probably does not affect the results since equal group sizes are not an assumption of $\Chi^2$ -tests [@franke2012]. However, depending on how the API extracts the articles, the assumption of independent observations might be violated and no strength measures (like Cramer's V) were calculated, leading to careful interpretation of the results. In @sec-wf, the skewed distribution may lead to problems since the countries and the terms used (in case there are characteristic terms per country) do not carry significant weight in the data. Since just a small number of terms is used in the model and there is a parameter accounting for the unequal appearance of words, the results should be interpretable.
+
+## Differences in countries {#sec-diff}
+
+```{r}
+#| echo: false
+
+# group dfm by country
+grouped <- dfm_group(dfm_key, groups = country)
+
+# calculate the key terms and corresponding chi2 values
+all_keys <- quanteda::docnames(grouped) |>
+  map(function(x) {
+    quanteda.textstats::textstat_keyness(grouped, target = x, measure = "chi2") |>
+      mutate(target = x)
+  }) |>
+  bind_rows()
+
+# arranging the five terms with the highest chi2 value
+pro_keys <- all_keys |>
+  select(feature, chi2, target, n_target) |>
+  filter(chi2 > 3.84) |> #filtering for non-significant terms, df = 1
+  group_by(target) |>
+  arrange(desc(chi2)) |>
+  slice(1:5) |>
+  summarise(terms = stringr::str_c(feature, " (", n_target, "), ", collapse = "") |> 
+              str_sub(1L, -3L),
+            target_counts = list(n_target)) |>
+  rename(country = target, key_terms = terms)
+
+# saving median, min and max chi2 values
+chi2 <- all_keys |>
+  select(feature, chi2, target, n_target) |>
+  group_by(target) |>
+  arrange(desc(chi2)) |> 
+  slice(1:5) |> 
+  ungroup() |> 
+  summarise(min = min(chi2), max = max(chi2), median = median(chi2, na.rm = TRUE))
+
+# replacing underscores with \\\underscore to avoid conversion problems with LaTeX
+pro_keys <- pro_keys |> 
+  mutate(key_terms = stringr::str_replace_all(key_terms, "_", "\\\\_"))
+
+```
+
+Since a table with key terms for all 55 countries would be hard to interpret, in the following the countries are analyzed based on their hemisphere. For each country, the five words with the highest $\chi^2$ score are depicted. The median $\chi^2$ is `{r} round(chi2$median, 2)`, ranging from `{r} round(chi2$min, 2)` to `{r} round(chi2$max, 2)`.
+
+@tbl-keynorth shows the key terms for countries in northern Africa and the search query 'Africa' itself. For the continent name, again the focus on medical terms is visible. Among the othern northern countries, the country's own name, the names of neighboring countries, or other geographical terms (e.g. north Africa) are among the most used words, next to rather methodological terms like 'control group' or 'obtain result' and terms from science like 'cell' or 'fatty acid'. Words that suggest a hierarchical relationship do not appear. Thus, regarding northern African countries, no colonial key-terms are visible.
+
+```{r}
+#| echo: false
+#| label: tbl-keynorth
+#| tbl-cap: "Key terms for each country in northern Africa (counts in parantheses)"
+
+northern_africa <- c("Africa", "Algeria", "Egypt", "Libya", "Mauritania", "Morocco", "Sudan", "Tunisia")
+pro_keys |> 
+  filter(country %in% northern_africa) |> 
+  select(country, key_terms) |> 
+  kable(col.names = c("Country", "Key Terms"))
+```
+
+When observing the key terms of western countries in @tbl-keywest, health-related terms become more frequent than in northern African countries. That is especially true for Mali, Nigeria, Togo, Ivory Coast, Burkina Faso and Liberia. The latter three stand out additionally by a focus on infectious diseases, whereas literature from Togo for example focuses on cancer. Also notable is  the appearance of other biology related terms like 'neuron', 'enzyme' or 'stem cell'. Results here indicate a focus of the scientific work in the data on health related topics, for example the study of diseases and their spread as well as cancer.
+
+```{r}
+#| echo: false
+#| label: tbl-keywest
+#| tbl-cap: "Key terms for each country in western Africa (counts in parantheses)"
+
+western_africa <- c("Benin", "Burkina Faso", "Cape Verde", "Gambia", "Ghana", "Guinea", "Guinea-Bissau", 
+                    "Ivory Coast", "Liberia", "Mali", "Niger", "Nigeria", "Senegal", "Sierra Leone", "Togo")
+pro_keys |> 
+  filter(country %in% western_africa) |> 
+  select(country, key_terms) |> 
+  kable(col.names = c("Country", "Key Terms"))
+```
+
+Key terms in eastern Africa, shown in @tbl-keyeast, paint a similar picture as the key terms in western Africa, with a visible but weaker focus on (infectious) diseases and medical terms. Next to HIV and malaria, this literature also focuses on 'tuberculosis', 'hepatitis' and 'human immunodeficiency'. Here, rather a focus on migration is visible, e.g. with terms like 'refugee' or 'migrate'. For Seychelles and Madagascar, a focus on the local flora and fauna is noticeable Overall, the key terms appear to have a more negative focus: scientific work focuses on 'depression' and 'bmi' as well as words, which might be positive or negative depending on the context ('human right' and 'physical activity'). However, since no tri-grams are depicted in the data, it is not clear whether the term is used solely or for example with a "missing" in front of it. For the first time, also countries outside of Africa (Israel and Canada) is among the key terms.
+
+```{r}
+#| echo: false
+#| label: tbl-keyeast
+#| tbl-cap: "Key terms for each country in eastern Africa (counts in parantheses)"
+
+eastern_africa <- c("Burundi", "Comoros", "Djibouti", "Eritrea", "Ethiopia", "Kenya", "Madagascar", 
+                    "Malawi", "Mauritius", "Rwanda", "Seychelles", "Somalia", "South Sudan", "Tanzania", "Uganda")
+pro_keys |> 
+  filter(country %in% eastern_africa) |> 
+  select(country, key_terms) |> 
+  kable(col.names = c("Country", "Key Terms"))
+```
+
+The key terms for mid African countries, as visible in @tbl-keymid, follow the same pattern as before. Most of the key terms here focus on biological and medical topics, however, the focus on migration is not visible anymore. With 'diabete' and 'hypertension' as well as 'maternal mortality' an additional focus next to HIV is visible. Other negative terms which might indicate a hierarical relationship are not visible.
+
+```{r}
+#| echo: false
+#| label: tbl-keymid
+#| tbl-cap: "Key terms for each country in mid Africa (counts in parantheses)"
+
+mid_africa <- c("Cameroon", "Central African Republic", "Chad", "Democratic Republic of the Congo", 
+                "Republic of the Congo", "Equatorial Guinea", "Gabon", "São Tomé and Príncipe") 
+pro_keys |> 
+  filter(country %in% mid_africa) |> 
+  select(country, key_terms) |> 
+  kable(col.names = c("Country", "Key Terms"))
+```
+
+Lastly, @tbl-keysouth presents key terms in southern Africa. Here, the focus on infectious diseases (especially HIV) is the strongest among the African countries. With 'Russia', for the second time countries outside of Africa are among the key terms, possibly referring to international relations between the countries. At the same time, general methodical terms and biological terms are less visible than before.
+
+```{r}
+#| echo: false
+#| label: tbl-keysouth
+#| tbl-cap: "Key terms for each country in southern Africa (counts in parantheses)"
+
+southern_africa <- c("Angola", "Botswana", "Eswatini", "Lesotho", "Mozambique", "Namibia", 
+                     "South Africa", "Zambia", "Zimbabwe")
+pro_keys |> 
+  filter(country %in% southern_africa) |> 
+  select(country, key_terms) |> 
+  kable(col.names = c("Country", "Key Terms"))
+```
+
+Overall, there is a very strong focus of scientific literature in the data visible. Articles focus mostly on medical terms, especially in context of infectious diseases like HIV and malaria, or on biological terms describing flora, fauna, and evolution. Additionally, a pattern from north to south and west to east with a stronger focus on infectious diseases and migration is visible. Terms that clearly suggest a hierarchical relationship, as claimed in decolonial literature, exist but are rather rare. That is also true for the negatively connoted terms, found e.g. by [@nothias2018]. It might be possible to construct a picture of 'Western' scholars coming to African countries, analyzing things on site, leave and write about it. Moreover, there is a weak pattern visible with a rising focus on negative terms from north to south and from west to east. However, without knowing the context in which the words have been used, it is not possible to support such a claim.
+
+## Colonialism-Continuum - The wordfish model {#sec-wf}
+
+```{r}
+#| echo: false
+
+wf_terms <- tibble(feature = wf$features, beta = wf$beta, psi = wf$psi)
+
+wf_groups <- tibble(groups = wf$docs, theta = wf$theta, theta_se = wf$se.theta)
+```
+
+Since the key terms do not point towards a clear conclusion, another method is used to analyze the terms used in the data: the wordfish model. Due to the previously mentioned word frequency boundaries, `{r} nrow(dataframe) - nrow(wf_groups)` articles were not considered in the model due to empty documents. 
+
+```{r}
+#| echo: false
+#| label: fig-grid
+#| fig-cap: "Density plots for the three variables in the wordfish model"
+
+p_psi <- wf_terms |> 
+  ggplot(aes(x = psi)) +
+  geom_density() +
+  labs(x = "Term fixed effects (Psi)", y = "Density")
+
+p_beta <- wf_terms |> 
+  ggplot(aes(x = beta)) +
+  geom_density() +
+  labs(x = "Term weights (Beta)", y = "Density")
+
+p_theta <- wf_groups |> 
+  ggplot(aes(x = theta)) +
+  geom_density() +
+  labs(x = "1d scaling positions (Theta)", y = "Density")
+
+p_grid <- plot_grid(p_psi, p_beta, p_theta, labels = c(NULL), label_size = 12, label_fontface = "plain", ncol = 1)
+p_grid
+```
+
+@fig-grid shows the distribution of the different parameters in the wordfish model. The density graph for Psi shows a slightly left skewed normal distribution for values around -5, however also a long tail for very rare terms due to the low lower boundary. The same is true for the density graph of beta, however, with tails not that long. The theta graph shows a bi modal distribution with high densities for values around -1 and 1. Even though the plots for psi and beta are rather unremarkable, the theta plot already indicates that the estimation (at least of the document level parameter) might not have been successful.
+
+```{r}
+#| echo: false
+#| label: tbl-excluded
+#| tbl-cap: "List of terms excluded in the wordfish figure with values for beta and psi."
+
+wf_terms |> 
+  filter(psi < -16) |> 
+  arrange(beta) |> 
+  kable()
+```
+
+The wordfish cloud with selected terms is visible in @fig-wordfish. In total, the model included `{r} nrow(wf_terms)` terms in the analysis. To make the graph more readable, four words with extremely low values for beta and (especially) psi were excluded (see @tbl-excluded). 'n._sp' is the abbreviation for a bird, 'sp nov' for a special bacteria and 'AOR' for the adjusted odds ratio. 
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-wordfish
+#| fig-cap: "Wordfish model"
+
+to_show <- c("quartz", "melt", "plant_growth", "nucleotide_sequence", "development", "violence", "healthcare", "hiv",
+             "hiv_aids", "social_support", "among_woman", "family_planning", "multivariable_logistic", "violence", 
+             "western", "poor", "rich", "african", "socioeconomic_status")
+
+p_terms <- wf_terms |> 
+  filter(psi > -16) |> # filtering for outliers to increase readability
+  ggplot(aes(x = beta, y = psi)) +
+  geom_point(aes(color = beta), alpha = 0.5) +
+  geom_text_repel(data = wf_terms |> 
+                    filter(feature %in% to_show),
+                  aes(label = feature),
+                  size = 2,
+                  color = "black",
+                  box.padding = 0.6,
+                  point.padding = 0.2,
+                  segment.color = "black",
+                  segment.size = 0.2) +
+  labs(x = "Beta (higher values = rather humanities)", y = "Psi (higher values = more frequent terms)") +
+  guides("color" = "none")
+p_terms
+```
+
+The wordfish plot shows the usual form with terms, which have low and high values for beta are appearing less often and are thus associated with a lower value for psi. The terms shown in the graph already indicate that the model might have arranged terms and documents on a continuum of subject: from literature focusing rather on science and subjects like biology, physics and geology to literature focusing rather on humans and social sciences, especially medicine (see also @tbl-beta_high and @tbl-beta_low in @sec-app_b which show the ten terms with the lowest and highest values for beta). Terms associated with low beta values include 'quartz', 'melt' and 'nucleotide sequence'. On the other side of the continuum, terms like 'social_support', 'family planning', 'among woman', 'hiv aids' and 'multivariable logistic' can be found. At first glance, rather negatively connoted terms like 'hiv' or 'violence' are pointing towards a colonialism-continuum, but terms like "development" or "rich" are at values for beta around 0, even though they would be expected on the upper end as well. A closer analysis reveals that terms with low beta values are primarily associated with biology, geology, and physics, followed by an increasing presence of medical terms, and eventually, terms related to social sciences for higher beta values.
+
+Regarding the abstracts, theta is relevant for the analysis and can also be useful for qualitative validation. Importantly, high beta values for terms correspond with high theta values for the abstracts; even though they are different parameters, the cardinal interpretation stays the same. Consequently, abstracts with a low value of theta should focus on sciences and abstracts with a high value on humanities. First, the abstract with the lowest theta value is shown below:
+
+```{r}
+#| echo: false
+
+# renaming the column and removing .1 for merging
+wf_groups <- wf_groups |> 
+  rename(identifier = groups) |> 
+  mutate(identifier = str_remove(identifier, "\\.1$"))
+
+# merging the original dataframe with the information for theta
+dataframe_wf <- left_join(dataframe, wf_groups, by = "identifier")
+
+low_theta <- dataframe_wf |> 
+  arrange(theta) |> 
+  slice(1:1) |> 
+  select(abstract)
+
+asis_output(paste("> ", low_theta$abstract))
+```
+
+This abstract focuses mainly on different species of bats, introducing some new sub-species. Thus, no focus on humans is visible in the abstract. The same is not true for the abstract with the highest theta value, as shown in the following:
+
+```{r}
+#| echo: false
+
+high_theta <- dataframe_wf |> 
+  arrange(desc(theta)) |> 
+  slice(1:1) |> 
+  select(abstract)
+
+asis_output(paste("> ", high_theta$abstract))
+```
+
+This abstract is focusing on the impact of IUCD's on family planning i.e. a clear reference to humans and humanities. Unfortunately, it is not possible to check where the authors are affiliated. However, some decolonial authors might argue that the abstract gives the impression of a white scholar coming to an African country and provides the people there with suggestions of how to improve their situation, especially in terms of getting less children. To summarize, checking the abstracts also supports the hypothesis that the model measured a difference in the subject from sciences to humanities.
+
+```{r}
+#| echo: false
+#| label: tbl-theta
+#| tbl-cap: "Countries with the highest and lowest median theta score"
+
+dataframe_wf |>
+  group_by(country) |>
+  summarise(median = median(theta, na.rm = TRUE)) |>
+  arrange(desc(median)) |> 
+  filter(median > 0.65 | median < -0.74) |> 
+  kable()
+```
+
+@tbl-theta shows the countries with the highest and lowest median theta scores over the years. In case the hypothesis regarding what the model measured is correct, countries like Eswatini, Rwanda and Somalia are rather researched from a perspective of humanities, whereas countries like Niger, Guinea and Namibia are rather researched from a science perspective. This finding stands in line with the key words depicted in @sec-diff.
+
+```{r}
+#| echo: false
+#| label: fig-theta_year
+#| fig-cap: "Development of the median theta score over the years"
+
+dataframe_wf |>
+  group_by(year) |>
+  summarise(median = median(theta, na.rm = TRUE),
+            lower = quantile(theta, 0.025, na.rm = TRUE),
+            upper = quantile(theta, 0.975, na.rm = TRUE)) |>
+  ggplot(aes(x = year, y = median)) +
+  labs(x = "Year", y = "Median theta score per year") +
+  geom_line(color = "blue") +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey40", alpha = 0.5)
+
+```
+
+Lastly, a development over time might be visible. @fig-theta_year shows the median theta score per year over the years, aggregated over all countries. Between 1996 and 2024, a rise in the median theta score over all countries is visible. Again, if the interpretation is correct, this development would mean that the share of humanities writing about Africa rose over the years. However, the confidence interval (shaded in grey) already indicates that there is a big difference between countries and/or articles in each year.
+
+```{r}
+#| echo: false
+#| label: fig-theta_countries
+#| fig-cap: "Selected countries with the median theta score over the years"
+#| warning: false
+
+dataframe_wf |>
+  filter(country == c("Central African Republic", "Rwanda", "Equatorial Guinea", "Niger")) |>
+  group_by(year, country) |>
+  summarise(median = median(theta, na.rm = TRUE)) |>
+  ggplot(aes(x = year, y = median, color = country)) +
+  geom_line() +
+  labs(x = "Year", y = "Median theta score per year")
+```
+
+As @fig-theta_countries shows for some countries with the lowest and highest theta scores, the constant development does not hold for single countries but is very volatile. A clear structure is not visible here.
+
+# Discussion
+
+The present paper aimed to shed light on how decolonialism and colonialism might be measured which terms are associated with them since there is a rising scientific community focusing on the topic. Since decolonialism is the idea that up to date colonial relations are reproduced by semantic differences in how certain topics and countries are written about, the paper expected that this hierarchy would also be visible in the abstracts of scientific articles about African countries over the years. However, the results do not indicate such a hierarchy.
+
+Key terms per country suggest a strong focus on biological, medical, and geological topics. Strongly negative words as identified in previous research, such as 'underdeveloped', 'tribe', 'war' and 'violence', were not among the key terms. However, a very strong focus on infectious diseases (especially HIV and malaria) as well as migration were observed The alternative approach to make a semantic difference visible, the wordfish model, also did not yield the expected results. The model rather measured the subjects the articles were from than a semantic difference in terms of colonialism. At the same time, that estimation proved to be very volatile and heterogeneous.
+
+As a summary, the hypotheses developed in @sec-hypo cannot be confirmed with the present paper. Importantly, multiple limitations have to be considered which might affect this result. First, a non-context-sensitive approach like the key terms does not seem to be able to fully cover such a relationship. Words like 'human rights' might be used just like that, or with a "missing" in front of it. Except for single, very expressive terms (e.g. 'war', 'violence'), that method might not cover the pattern. Additionally, regarding the north-south and east-west pattern, it cannot be ruled out that the pattern is an artifact of the filtering method. Even though the wordfish model seems better suited to detect patterns, the pattern it did observe was rather an artifact of the sample than a 'pattern'. To avoid that, analyzing only articles from a single subject might yield other results. Additionally, for both methods, it might be possible that a comparison group was missing and would have changed the result. Both methods rely on a comparison with other countries and terms - in the present data, only articles  about African countries were included. Even though a weak pattern from North to South was visible regarding a negative focus, it might have been too weak to detect a pattern and it could be possible that including articles on 'Western' countries could yield a different result and reveals a pattern. Lastly, the articles do not fully reflect the whole scientific landscape and literature. SPRINGER, while being a big publisher, includes only a subset of journals and the data also just covered articles, which have been approved by an editor board. Articles clearly reproducing colonial thought are probably less likely to be published.
+
+Overall, the approach presented in the paper generally seems to be promising. Despite these limitations, a weak but noticeable pattern emerges, highlighting a focus on infectious diseases and the impression of 'Western' scholars to research in African countries before leaving and publishing independently. Future research may reveal a clearer pattern by addressing these limitations and employing a context-sensitive method. Analyzing the affiliations of authors publishing about African countries, which is not possible with the current API, might reveal additional information. Large language models or natural language processing methods may also be capable of capturing what decolonial scholars have until now only been able to describe as an impression.
+
+{{< pagebreak >}}
+
+# References
+
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+# Appendix
+
+## Full table with number of observations per country {#sec-app_a}
+
+```{r}
+#| echo: false
+#| label: tbl-ncountry
+#| tbl-cap: "Number of observations per country after removing NA's and multiple entries."
+
+dataframe |> 
+  group_by(country) |> 
+  summarise(n = n()) |> 
+  arrange(desc(n)) |> 
+  kable()
+
+```
+{{< pagebreak >}}
+
+## Words with the highest and lowest beta scores in the wordfish model {#sec-app_b}
+
+```{r}
+#| echo: false
+#| label: tbl-beta_high
+#| tbl-cap: "10 terms with the highest beta scores."
+
+wf_terms |> 
+  arrange(desc(beta)) |> 
+  slice(1:10) |> 
+  kable()
+```
+
+```{r}
+#| echo: false
+#| label: tbl-beta_low
+#| tbl-cap: "10 terms with the lowest beta scores"
+
+wf_terms |>
+  arrange(beta) |>
+  slice(1:10) |> 
+  kable()
+```
+{{< pagebreak >}}
+
+## Eigenständigkeitserklärung
+
+Ich versichere hiermit, dass ich die vorgelegte Haus-/Seminararbeit eigenständig und ohne fremde Hilfe verfasst, keine anderen als die angegebenen Quellen verwendet und die den benutzten Quellen entnommenen Passagen als solche kenntlich gemacht habe. Diese Seminararbeit ist in dieser oder einer ähnlichen Form in keinem anderen Kurs und/oder Studiengang als Studien-oder Prüfungsleistung vorgelegt worden. Hiermit stimme ich zu, dass die vorliegende Arbeit von den Prüferinnen in elektronischer Form mit entsprechender Software überprüft wird. 
+
+  
+$\vspace{3cm}$
+  
+München, den 04.03.2025

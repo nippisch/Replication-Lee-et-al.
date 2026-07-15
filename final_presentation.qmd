@@ -1,0 +1,431 @@
+---
+title: "Final Presentation"
+subtitle: "Apples and pears? Impacts of using the Jacobian scaled conditional Akaike Information Criteria for model selection in linear mixed models. Advanced Small Area Estimation (Prof. Schmid)"
+author: "Niklas Ippisch"
+date: "07.22.2026"
+format: beamer
+#incremental: TRUE
+---
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+library(tidyverse)
+library(ggpubr)
+library(kableExtra)
+```
+
+
+## Motivation
+
+- Situation: Linear Mixed Model with $y_i = X_i\beta + Z_iu_i + \epsilon_i$
+
+- Adequate set of variables essential for good model fit
+
+- Data driven transformation can improve the model fit
+
+- Transformations especially important if normality assumption(s) $u_i \sim N(0, G)$ and/or $\epsilon_i \sim N(0, \sigma^2I_n)$ not fulfilled
+
+- Problem: Variable selection and estimation of transformation parameter $\lambda$ affect each other:
+  - Optimal set of covariates depends on transformation chosen and vice versa
+  - Other papers suggest the usage of a conditional Akaike Information Criteria: $cAIC = -2log(g(y|\hat{\theta}, \hat{u})) + 2K_{MLE}$
+  - Problem: Not scale invariant
+  - Naïve solution: variable selection on original scale and transformation afterwards
+
+## Proposed Solution I
+
+- Idea: Change of variable approach: $l(y|\theta, u) = g(\tilde{y}|\theta, u) \cdot J(\lambda, y)$, with $l(y|\theta, u)$ being the conditional model density $\rightarrow$ calculation of K-L-divergence between conditional true and model density
+
+- Solution: Scaling the $cAIC$ with the Jacobian $J$: $JcAIC = -2log(g(\tilde{y}|\hat{\theta}, \hat{u})) - 2log(J(\hat{\lambda}, y)) + 2BC$
+
+- $\tilde{y}$ being the vector of transformed $y$ with transformation $T_\lambda(y)$
+
+- $g$ being the density function of the approximating model
+
+- $J$ being the Jacobian matrix: $J(\hat{\lambda}, y) = \prod^D_{i = 1} \prod^{N_i}_{j = 1} \frac{\partial \tilde{y}_{ij}}{\partial y_{ij}} = \prod^D_{i = 1} \prod^{N_i}_{j = 1} (y_{ij} + s)^{\lambda - 1}$
+
+- $BC$ being a bias correction term, estimated by a bootstrap
+
+## Proposed Solution II
+
+Consider a Box-Cox transformation ($i = 1, ..., D \text{ and } j = 1, ..., N_i$):
+$$
+T_\lambda(y_{ij}) = \tilde{y} =
+\begin{cases}
+  \frac{(y_{ij} + s)^\lambda - 1}{\lambda}   & \text{if } \lambda \neq 0 \\
+  log(y_{ij} + s)    & \text{if } \lambda = 0
+\end{cases}
+$$
+
+1.  Start with full model with all $p$ variables and estimate $\hat{\lambda}$ for a Box-Cox transformation 
+
+2.  For each step $s = 1, ..., S$:
+    i)  Consider all possible models which exclude one predictor
+    ii) Estimate $\hat{\lambda}$ for each candidate and calculate $JcAIC$ with estimated $\hat{\lambda}$
+    iii) Compare $JcAIC$ values and choose model with lowest value as new optimal model
+3.  Compare $JcAIC$ from 2.iii) with the previously optimal model from step $s-1$. Repeat until no better $JcAIC$ can be found.
+
+## Methods
+
+- Research question: Does the proposed simultaneous selection and estimation outperform the naive selection in different data scenarios?
+- Approach I: Simulation Study
+  - Four different data generation processes
+  - Four different variable selection mechanisms
+  - Inclusion of two irrelevant and one weak associated variables in the model
+- Approach II: Application to real world data
+  - Data from Mozambique
+  - Estimation of head count ration and poverty gap based on naive approach vs. proposed solution
+  
+## Variable Selection Mechanisms
+
+- "No": $T_\lambda(y_{ij}) = y$ with simple stepwise variable selection on original scale
+
+- "Log": $T_\lambda(y_{ij}) = log(y)$ with simple stepwise variable selection on original scale
+
+- "Box-Cox Naïve": First stepwise selection on original scale and Box-Cox transformation afterwards
+
+- "Box-Cox Optimal": Stepwise variable selection using $JcAIC$ on Box-Cox transformed $y$
+
+
+## Data generating processes
+
+- $x_{1, ij} \sim N(\mu_i, 3^2) \text{ with } \mu_i \sim U[-3, 3], \newline x_{2, ij} \sim Bin(1, 0.8), x_{3, ij} \sim N(0, 1)$
+
+- Additional irrelevant variables: $z_1 \sim N(1, 0.1^2)$ and $z_2 \sim Bin(1, 0.4)$
+
+- Normal (Low): $400-10x_{1, ij} + 100x_{2, ij} - 10x_{3, ij} + u_i + e_{ij}$, $u_i \sim N(0, 30^2), e_{ij} \sim N(0, 60^2)$
+
+- Normal (High): $400-10x_{1, ij} + 100x_{2, ij} - 10x_{3, ij} + u_i + e_{ij}$, $u_i \sim N(0, 10^2), e_{ij} \sim N(0, 20^2)$
+
+- Log: $exp\{10-x_{1, ij} + x_{2, ij} - 0.5x_{3, ij} + u_i + e_{ij}\}$
+
+- Box-Cox: $[(10-x_{1, ij} + x_{2, ij} - 0.5x_{3, ij} + u_i + e_{ij})\cdot(-0.5)+1]^{\frac{1}{-0.5}}$
+
+## B = 50 vs. B = 200
+```{=latex}
+\begin{table}[]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrr}
+\toprule
+dgp & transformation & mean\_JcAIC\_b50 & mean\_JcAIC\_b200 & mean\_lambda\_b50 & mean\_lambda\_b200 & proportion\_correct\_b50 & proportion\_correct\_b200 \\
+\midrule
+boxcox      & box.cox       & -2785.  & -2770.  & -0.483  & -0.483  & 0.8 & 0.9 \\
+boxcox      & boxcox\_naive & -2667.  & -2638.  & -0.490  & -0.489  & 0.3 & 0.3 \\
+boxcox      & log           & -2020.  & -2010.  & NaN     & NaN     & 1.0 & 1.0 \\
+boxcox      & no            & 6470.   & 6480.   & NaN     & NaN     & 0.3 & 0.3 \\
+log         & box.cox       & 14838.  & 14839.  & 0.00200 & 0.00197 & 0.6 & 0.8 \\
+log         & boxcox\_naive & 14914.  & 14906.  & 0.00345 & 0.00336 & 0.2 & 0.2 \\
+log         & log           & 14837.  & 14838.  & NaN     & NaN     & 0.6 & 0.8 \\
+log         & no            & 21501.  & 21511.  & NaN     & NaN     & 0.2 & 0.2 \\
+normal\_high & box.cox      & 7046.   & 7040.   & 1.26    & 1.35    & 0.6 & 0.6 \\
+normal\_high & boxcox\_naive& 7098.   & 7065.   & 0.951   & 0.951   & 0.8 & 0.8 \\
+normal\_high & log          & 7161.   & 7173.   & NaN     & NaN     & 0.8 & 0.8 \\
+normal\_high & no           & 7126.   & 7137.   & NaN     & NaN     & 0.8 & 0.8 \\
+normal\_low  & box.cox      & 8352.   & 8405.   & 0.963   & 0.939   & 0.3 & 0.3 \\
+normal\_low  & boxcox\_naive& 8374.   & 8410.   & 0.939   & 0.939   & 0.7 & 0.7 \\
+normal\_low  & log          & 8481.   & 8492.   & NaN     & NaN     & 0.8 & 0.7 \\
+normal\_low  & no           & 8451.   & 8463.   & NaN     & NaN     & 0.7 & 0.7 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Comparison of results across B = 50 and  B = 200 replications for the Bootstrap of the BC-Term}
+\end{table}
+```
+
+
+## Data generating processes
+
+```{r}
+#| echo: FALSE
+load("data/dgps_R1.RData")
+pop_normal_low <- sim_res_pop[["normal_low"]][[1]]
+pop_normal_high <-sim_res_pop[["normal_high"]][[1]]
+pop_log <- sim_res_pop[["log"]][[1]]
+pop_boxcox <- sim_res_pop[["boxcox"]][[1]]
+
+y_normal_low <- pop_normal_low |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_normal_low$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Normal (Low)",
+       caption = "Blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_normal_high <- pop_normal_high |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_normal_high$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Normal (High)",
+       caption = "Blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_log <- pop_log |> 
+  filter(y < 50000) |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_log$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Log",
+       caption = "Data tructuated due to visibility, y < 50,000; \n blue line indicates median",
+       x = "Target Variable",
+       y = "")
+y_boxcox <- pop_boxcox |> 
+  filter(y < 1) |> 
+  ggplot(aes(x = y)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = median(pop_boxcox$y), color = "blue") +
+  theme_minimal() +
+  labs(subtitle = "Box-Cox",
+       caption = "Data tructuated due to visibility, y < 1; \n blue line indicates median",
+       x = "Target Variable",
+       y = "")
+
+ggarrange(y_normal_low, y_normal_high, y_log, y_boxcox, ncol = 2, nrow = 2)
+
+```
+
+## Results: Optimal Lambda's
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+
+load("data/results_replication_R10_z.RData")
+res_df <- res_df |> 
+  mutate(transformation = case_when(
+    transformation == "box.cox"       ~ "Box-Cox (Optimal)",
+    transformation == "boxcox_naive"  ~ "Box-Cox (Naive)",
+    transformation == "log"           ~ "Log",
+    transformation == "no"            ~ "None",
+    TRUE ~ transformation),
+    dgp = case_when(
+      dgp == "normal_low" ~ "Normal (Low)",
+      dgp == "normal_high" ~ "Normal (High)",
+      dgp == "log" ~ "Log",
+      dgp == "boxcox" ~ "Box Cox")) |> 
+  rename(DGP = dgp,
+         Transformation = transformation)
+res_df |> 
+  filter(!is.na(opt_lambda)) |> 
+  group_by(DGP, Transformation) |> 
+  ggplot(aes(x = DGP, y = opt_lambda, fill = Transformation)) +
+  geom_boxplot() +
+  ylim(c(-1, 2.1)) +
+  theme_minimal() +
+  labs(x = "Data Generating Process",
+       y = "Estimated Optimal Lambda",
+       fill = "Variable Selection") +
+  scale_fill_brewer(palette = "Set2")
+  
+```
+
+## Results: Optimal Lambda's
+
+- Expectation: $\hat{\lambda} \approx 1$ for Normal settings $\hat{\lambda} \approx 0$ for Log Setting, and $\hat{\lambda} \approx -0.5$ for Box-Cox-Setting
+
+```{r}
+t_lambda <- res_df |> 
+  filter(!is.na(opt_lambda)) |> 
+  group_by(DGP, Transformation) |> 
+  summarise(Min = round(min(opt_lambda), 2),
+            Mean = round(mean(opt_lambda), 2),
+            Median = round(median(opt_lambda), 2),
+            Max = round(max(opt_lambda), 2))
+kable(t_lambda)
+```
+
+
+## Results: JcAIC
+
+```{r}
+res_df |> 
+  group_by(DGP, Transformation) |> 
+  ggplot(aes(x = DGP, y = JcAIC, fill = Transformation)) +
+  geom_boxplot() +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(x = "Data Generating Process",
+       y = "(J)cAIC",
+       fill = "Variable Selection") +
+  scale_fill_brewer(palette = "Set2")
+```
+
+## Results: JcAIC
+
+- Normal (Low):
+
+```{r}
+#| echo: FALSE
+t_jcaic_nl <- res_df |> 
+  filter(DGP == "Normal (Low)") |> 
+  group_by(Transformation) |> 
+  summarise(Min = round(min(JcAIC), 2),
+            Mean = round(mean(JcAIC), 2),
+            Median = round(median(JcAIC), 2),
+            Max = round(max(JcAIC), 2))
+kable(t_jcaic_nl)
+```
+
+- Normal (High):
+
+```{r}
+#| echo: FALSE
+t_jcaic_nh <- res_df |> 
+  filter(DGP == "Normal (High)") |> 
+  group_by(Transformation) |> 
+  summarise(Min = round(min(JcAIC), 2),
+            Mean = round(mean(JcAIC), 2),
+            Median = round(median(JcAIC), 2),
+            Max = round(max(JcAIC), 2))
+kable(t_jcaic_nh)
+```
+
+## Results: JcAIC
+
+- Log:
+
+```{r}
+#| echo: FALSE
+t_jcaic_log <- res_df |> 
+  filter(DGP == "Log") |> 
+  group_by(Transformation) |> 
+  summarise(Min = round(min(JcAIC), 2),
+            Mean = round(mean(JcAIC), 2),
+            Median = round(median(JcAIC), 2),
+            Max = round(max(JcAIC), 2))
+kable(t_jcaic_log)
+```
+
+- Box-Cox:
+
+```{r}
+#| echo: FALSE
+t_jcaic_bc <- res_df |> 
+  filter(DGP == "Box Cox") |> 
+  group_by(Transformation) |> 
+  summarise(Min = round(min(JcAIC), 2),
+            Mean = round(mean(JcAIC), 2),
+            Median = round(median(JcAIC), 2),
+            Max = round(max(JcAIC), 2))
+kable(t_jcaic_bc)
+```
+
+## Results: Correctly identified variables
+
+```{r}
+res_df |> 
+  mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  group_by(DGP, Transformation) |> 
+  summarise(mean = mean(correct_model)) |> 
+  ggplot(aes(x = DGP, y = mean, fill = Transformation)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(x = "Data Generating Process",
+       y = "Mean of correctly identified models",
+       fill = "Transformation") +
+  scale_fill_brewer(palette = "Set2")
+```
+
+
+## Results: Correctly identified variables
+
+- Normal (Low)
+
+```{r}
+#| echo: FALSE
+
+t_model_nl <- res_df |> 
+  filter(DGP == "Normal (Low)") |> 
+  mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  group_by(Transformation) |> 
+  summarise(x1 = mean(x1),
+            x2 = mean(x2),
+            x3 = mean(x3),
+            z1 = mean(z1),
+            Correct = mean(correct_model))
+kable(t_model_nl)
+
+```
+
+- Normal (High)
+
+```{r}
+#| echo: FALSE
+
+t_model_nh <- res_df |> 
+  filter(DGP == "Normal (High)") |> 
+  mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  group_by(Transformation) |> 
+  summarise(x1 = mean(x1),
+            x2 = mean(x2),
+            x3 = mean(x3),
+            z1 = mean(z1),
+            Correct = mean(correct_model))
+kable(t_model_nh)
+
+```
+
+## Results: Correctly identified variables
+
+- Log
+
+```{r}
+#| echo: FALSE
+
+t_model_nl <- res_df |> 
+  filter(DGP == "Log") |> 
+  mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  group_by(Transformation) |> 
+  summarise(x1 = mean(x1),
+            x2 = mean(x2),
+            x3 = mean(x3),
+            z1 = mean(z1),
+            Correct = mean(correct_model))
+kable(t_model_nl)
+
+```
+
+- Box-Cox
+
+```{r}
+#| echo: FALSE
+
+t_model_nh <- res_df |> 
+  filter(DGP == "Box Cox") |> 
+  mutate(correct_model = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0, 1, 0)) |> 
+  group_by(Transformation) |> 
+  summarise(x1 = mean(x1),
+            x2 = mean(x2),
+            x3 = mean(x3),
+            z1 = mean(z1),
+            Correct = mean(correct_model))
+kable(t_model_nh)
+
+```
+
+## Discussion
+
+- More computational intensive variable selection using the $JcAIC$ mostly improves performance compared to naïve methods
+    - Estimated $\hat{\lambda}$ close to true $\lambda$, but same/worse performance than naïve method
+    - Same performance for Normal and Log setup and best performance for Box-Cox DGP
+    - Moderate performance regarding variable selection for Normal settings, good for Log and Box-Cox
+- Is it worth the trouble? Yes, if you have the computational power
+
+$$
+\begin{align}
+\text{Thank you for your attention!} \nonumber
+\end{align}
+$$
+
+## Literature
+
+Krennmair, P., Würz, N., Schmid, T., & Tzavidis, N. (2026). Random forests and mixed effectsrandom forests for small area estimation of general parameters: A poverty mapping casestudy in mozambique. *Annals of Applied Statistics,20*(1), 809–832.https://doi.org/10.1214/25-AOAS2126
+
+Lee, Y., Rojas-Perilla, N., Runge, M., & Schmid, T. (2023). Variable selection using conditionalAIC for linear mixed models with data-driven transformations. *Statistics and Computing,33*(1), 27.https://doi.org/10.1007/s11222-022-10198-9
+
+Notes: data situation simulation study imitating Mozambique data

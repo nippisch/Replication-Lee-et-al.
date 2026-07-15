@@ -1,0 +1,89 @@
+---
+title: "Short Presentation"
+subtitle: "Apples and pears? Impacts of using the Jacobian scaled conditional Akaike Information Criteria for model selection in linear mixed models. Advanced Small Area Estimation (Prof. Schmid)"
+author: "Niklas Ippisch"
+format: beamer
+#incremental: TRUE
+---
+
+## Background & Motivation
+
+- Choosing an adequate set of variables essential for good model fit
+- Data driven transformation can improve the model fit
+- Transformations especially important if normality assumption(s) not fulfilled
+- Problem: Variable selection and estimation of transformation parameter $\lambda$ affect each other:
+  - Optimal set of covariates depends on transformation chosen and vice versa
+  - Other papers suggest the usage of a conditional Akaike Information Criteria: $cAIC = -2log(g(y|\hat{\theta}, \hat{u})) + 2K_{MLE}$
+  - Problem: It is not scale invariate, therefore cannot be used to compare models with different target variable $y$
+
+## Proposed Solution I
+
+- Solution: Scaling the $cAIC$ with the Jacobian $J$: $JcAIC = -2log(g(\tilde{y}|\hat{\theta}, \hat{u})) - 2log(J(\hat{\lambda}, y)) + 2BC$
+
+- $\tilde{y}$ being the vector of transformed $y$ with transformation $T_\lambda(y)$
+
+- $g$ being the density function of the approximating model
+
+- $J$ being the Jacobian matrix: $J(\hat{\lambda}, y) = \prod^D_{i = 1} \prod^{N_i}_{j = 1} \frac{\partial \tilde{y}_{ij}}{\partial y_{ij}} = \prod^D_{i = 1} \prod^{N_i}_{j = 1} (y_{ij} + s)^{\lambda - 1}$
+
+- $BC$ being a bias correction term, estimated by a bootstrap
+
+## Proposed Solution II
+
+1.  Start with full model with all p variables and estimate $\hat{\lambda}$
+2.  For each step $s = 1, ..., S$:
+    i)  Consider all possible models which exclude one predictor
+    ii) Estimate $\hat{\lambda}$ for each candidate and calculate $JcAIC$ with estimated $\hat{\lambda}$
+    iii) Compare $JcAIC$ values and choose model with lowest value as new optimal model
+3.  Compare $JcAIC$ from 2.iii) with the previously optimal model from step $s-1$. Repeat until no better $JcAIC$ can be found.
+
+## Methodical approach for the term paper
+
+- Research question: Does the proposed simultaneous selection and estimation outperform the naive selection in different data scenarios?
+- Approach I: Simulation Study
+  - Three different distributions (e.g., normal, log, pareto)
+  - Inclusion of two irrelevant and one weak associated variables in the model
+  - Comparison of naive approach vs. proposed solution based on $JcAIC$ and proportion selecting the correct model
+- Approach II: Application to real world data
+  - Data from Mozambique
+  - Estimation of head count ration and poverty gap based on naive approach vs. proposed solution
+
+## Pseudo Code for model based simulation
+
+1.  Select data settings (Normal, Log, Box-Cox, Pareto?) and data generating model
+
+2.  For $m = 1, ..., M$ iterations:
+
+    i)  Draw covariates from respective distributions and create pseudo population, including irrelevant variable(s)
+
+    ii) For $a = 1, ..., A$ variable selection approaches:
+
+        I\) Perform stepwise variable selection and/or estimation of $\lambda$
+
+        II\) Calculate $JcAIC$ for optimal model
+
+3.  Compare estimated lambda and $JcAIC$ of each optimal model
+
+## Discussion
+
+- Currently still subject to discussion
+  - What distributions to use
+  - Domain and sample sizes (+ association)
+  - Evaluation of real world data application
+- Open questions
+  - Citation of methodology (especially pseudo code)
+  - Comparability with results of Krennmair et al. (2026)
+
+$$
+\begin{align}
+\text{Thank you for your attention!} \nonumber
+\end{align}
+$$
+
+## Literature
+
+Krennmair, P., Würz, N., Schmid, T., & Tzavidis, N. (2026). Random forests and mixed effectsrandom forests for small area estimation of general parameters: A poverty mapping casestudy in mozambique. *Annals of Applied Statistics,20*(1), 809–832.https://doi.org/10.1214/25-AOAS2126
+
+Lee, Y., Rojas-Perilla, N., Runge, M., & Schmid, T. (2023). Variable selection using conditionalAIC for linear mixed models with data-driven transformations. *Statistics and Computing,33*(1), 27.https://doi.org/10.1007/s11222-022-10198-9
+
+Notes: data situation simulation study imitating Mozambique data
