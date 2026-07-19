@@ -107,7 +107,7 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
   } else if (transformation == "box.cox") { # if statement 2: boxcox-transformation
     
     # optimize lambda on full model using original y
-    lambdaopt <- optimal_parameter(generic_opt,
+    lambdaopt_start <- optimal_parameter(generic_opt,
                                    fixed = fixed,
                                    smp_data = data,
                                    smp_domains = "domain",
@@ -115,7 +115,7 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
                                    interval = interval)
     
     # transformation and saving in new variable
-    data$y_bc <- ((data$y)^lambdaopt - 1) / lambdaopt
+    data$y_bc <- ((data$y)^lambdaopt_start - 1) / lambdaopt_start
     
     # updating model formula
     fixed <- update.formula(fixed, y_bc ~ .)
@@ -164,11 +164,12 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
     
     JcAIC_res <- fitopt$models[[length(fitopt$models)]]
     JcAIC_res$opt_vars <- fitopt$fit$call$fixed
+    JcAIC_res$lambdaopt_start <- lambdaopt_start
     
   } else if (transformation == "boxcox_naive") {
     
     # optimize lambda on optimal model
-    lambdaopt <- optimal_parameter(generic_opt,
+    lambdaopt_start <- optimal_parameter(generic_opt,
                                    fixed = formula(fitopt$fit),
                                    smp_data = data,
                                    smp_domains = "domain",
@@ -197,7 +198,8 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
     JcAIC_res <- list(lambdaopt = lambdaopt,
                       JcAIC = JcAIC_result$JcAIC,
                       JcAIC_result = JcAIC_result,
-                      opt_vars = fixed_updated)
+                      opt_vars = fixed_updated,
+                      lambda_start = lambdaopt_start)
     
   }
   
