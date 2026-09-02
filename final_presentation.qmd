@@ -476,6 +476,10 @@ $$
 \end{align}
 $$
 
+## Notes
+- RMSE mit original-Daten
+- Coverage --> wird noise "rausgerechnet"?
+
 ## Literature
 
 Lee, Y., Rojas-Perilla, N., Runge, M., & Schmid, T. (2023). Variable selection using conditionalAIC for linear mixed models with data-driven transformations. *Statistics and Computing,33*(1), 27.https://doi.org/10.1007/s11222-022-10198-9

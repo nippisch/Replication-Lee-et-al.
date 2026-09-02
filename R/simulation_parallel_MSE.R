@@ -1,5 +1,5 @@
 ################################################################################
-######## Simulation Study for further exploration ##############################
+######## Own Simulation Study for Term Paper ###################################
 ######## Author: Niklas Ippisch ################################################
 ################################################################################
 
@@ -18,13 +18,13 @@ source("Lee_et_al_JcAIC/optimal_parameter.R")
 N <- 10000 # population size
 R <- 6 # monte Carlo iterations
 D <- 50 # number of domains
-B <- 200 # number of bootstrap iterations for JcAIC bias correction term
-interval <- c(-4, 4) # interval for parameter lambda
+B <- 50 # number of bootstrap iterations for JcAIC bias correction term
+interval <- c(-2, 2) # interval for parameter lambda
 base_seed <- 12345 # base seed for reproducibility 
 set.seed(base_seed) # set base seed for reproducibility
 sample_size <- round(runif(D, min = 0, max = 30)) # vector of sample sizes per domain
-dgp_settings <- c("normal_low", "normal_high") # data generating processes
-transformations <- c("box.cox") # possible transformations
+dgp_settings <- c("normal_low", "normal_high", "log", "boxcox") # data generating processes
+transformations <- c("no", "log", "boxcox_naive", "box.cox") # possible transformations
 
 # definition of help functions -------------------------------------------------
 
@@ -49,11 +49,11 @@ dgp <- function(distribution, N, D) {
   x2 <- rbinom(n = N, size = 1, prob = 0.8)
   x3 <- rnorm(n = N, mean = 0, sd = 1)
   z1 <- rnorm(n = N, mean = 1, sd = 0.1)
+  z2 <- rbinom(n = N, size = 1, prob = 0.4)
   
   if (distribution == "normal_low") {
     
-    mu_i <- runif(n = D, min = -3, max = 3)
-    x1   <- rnorm(n = N, mean = mu_i[domain], sd = 3)
+    x1 <- rnorm(n = N, mean = runif(n = 1, min = -3, max = 3), sd = 3)
     
     u <- rnorm(n = D, mean = 0, sd = 30)
     e <- rnorm(n = N, mean = 0, sd = 60)
@@ -62,8 +62,7 @@ dgp <- function(distribution, N, D) {
     
   } else if (distribution == "normal_high") {
     
-    mu_i <- runif(n = D, min = -3, max = 3)
-    x1   <- rnorm(n = N, mean = mu_i[domain], sd = 3)
+    x1 <- rnorm(n = N, mean = runif(n = 1, min = -3, max = 3), sd = 3)
     
     u <- rnorm(n = D, mean = 0, sd = 10)
     e <- rnorm(n = N, mean = 0, sd = 20)
@@ -72,8 +71,7 @@ dgp <- function(distribution, N, D) {
     
   } else if (distribution == "log") {
     
-    mu_i <- runif(n = D, min = 2, max = 3)
-    x1   <- rnorm(n = N, mean = mu_i[domain], sd = 2)
+    x1 <- rnorm(n = N, mean = runif(n = 1, min = 2, max = 3), sd = 2)
     
     u <- rnorm(n = D, mean = 0, sd = 0.4)
     e <- rnorm(n = N, mean = 0, sd = 0.8)
@@ -82,8 +80,7 @@ dgp <- function(distribution, N, D) {
     
   } else if (distribution == "boxcox") {
     
-    mu_i <- runif(n = D, min = 2, max = 3)
-    x1   <- rnorm(n = N, mean = mu_i[domain], sd = 2)
+    x1 <- rnorm(n = N, mean = runif(n = 1, min = 2, max = 3), sd = 2)
     
     u <- rnorm(n = D, mean = 0, sd = 0.4)
     e <- rnorm(n = N, mean = 0, sd = 0.8)
@@ -92,7 +89,7 @@ dgp <- function(distribution, N, D) {
     
   }
   
-  data.frame(id = 1:N, domain, y, x1, x2, x3, z1)
+  data.frame(id = 1:N, domain, y, x1, x2, x3, z1, z2)
 }
 
 # function for conducting the stepwise variable selection using JcAIC
@@ -115,16 +112,15 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
   } else if (transformation == "box.cox") { # if statement 2: boxcox-transformation
     
     # optimize lambda on full model using original y
-    lambdaopt_start <- optimal_parameter(generic_opt,
-                                         fixed = fixed,
-                                         smp_data = data,
-                                         smp_domains = "domain",
-                                         transformation = "box.cox",
-                                         interval = interval)
+    lambdaopt <- optimal_parameter(generic_opt,
+                                   fixed = fixed,
+                                   smp_data = data,
+                                   smp_domains = "domain",
+                                   transformation = "box.cox",
+                                   interval = interval)
     
     # transformation and saving in new variable
-    s <- if (min(data$y) < 0) abs(min(data$y)) + 1 else 0
-    data$y_bc <- ((data$y + s)^lambdaopt_start - 1) / lambdaopt_start
+    data$y_bc <- ((data$y)^lambdaopt - 1) / lambdaopt
     
     # updating model formula
     fixed <- update.formula(fixed, y_bc ~ .)
@@ -167,7 +163,7 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
                       trans = trans_tmp,
                       y_col = "y",
                       interval = interval,
-                      trace = FALSE)
+                      trace = TRUE)
   
   if (transformation != "boxcox_naive") {
     
@@ -177,16 +173,15 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
   } else if (transformation == "boxcox_naive") {
     
     # optimize lambda on optimal model
-    lambdaopt_start <- optimal_parameter(generic_opt,
-                                         fixed = formula(fitopt$fit),
-                                         smp_data = data,
-                                         smp_domains = "domain",
-                                         transformation = "box.cox",
-                                         interval = interval)
+    lambdaopt <- optimal_parameter(generic_opt,
+                                   fixed = formula(fitopt$fit),
+                                   smp_data = data,
+                                   smp_domains = "domain",
+                                   transformation = "box.cox",
+                                   interval = interval)
     
     # transformation and saving in new variable
-    s <- if (min(data$y) < 0) abs(min(data$y)) + 1 else 0
-    data$y_bc_naive <- ((data$y + s)^lambdaopt_start - 1) / lambdaopt_start
+    data$y_bc_naive <- ((data$y)^lambdaopt - 1) / lambdaopt
     
     fixed_updated <- update.formula(formula(fitopt$fit), y_bc_naive ~ .)
     
@@ -204,10 +199,10 @@ stepwise_JcAIC <- function(data, B , interval, transformation = c("no", "log", "
                           B = B, 
                           y_col = "y")
     
-    JcAIC_res <- list(JcAIC = JcAIC_result$JcAIC,
+    JcAIC_res <- list(lambdaopt = lambdaopt,
+                      JcAIC = JcAIC_result$JcAIC,
                       JcAIC_result = JcAIC_result,
-                      opt_vars = fixed_updated,
-                      lambda_start = lambdaopt_start)
+                      opt_vars = fixed_updated)
     
   }
   
@@ -245,6 +240,52 @@ run_one_iteration <- function(r, dgp_settings, transformations, N, D, B,
                r = r, dgp = dgp_settings[j], transformation = transformations[t])
         }
       )
+      
+    }
+    
+    # Test population for MSE Evaluation with reproducible seed
+    test_sampled    <- pop_r[pop_r$domain %in% sampled_domains, ]
+    test_nonsampled <- pop_r[!pop_r$domain %in% sampled_domains, ]
+    
+    for (t in seq_along(transformations)) {
+      
+      # Calculating the MSE
+      if (!is.null(iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$error) ||
+          is.null(iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$JcAIC_result$lmefit)) {
+        
+        # simply setting MSE as NA in case no model was fitted
+        iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$MSE <- NA
+        
+      } else {
+        
+        # separate prediction for sampled and non-sampled domains
+        yhat <- numeric(nrow(pop_r))
+        yhat[pop_r$domain %in% sampled_domains]  <- predict(iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$JcAIC_result$lmefit, 
+                                                               newdata = test_sampled, 
+                                                               level = 1)
+        yhat[!pop_r$domain %in% sampled_domains] <- predict(iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$JcAIC_result$lmefit, 
+                                                               newdata = test_nonsampled, 
+                                                               level = 0)
+        
+        # back-transforming before calculating the MSE
+        if (transformations[t] == "log") {
+          
+          # static back-transformation with exp (acknowledging a back-transformation bias due to Jensen's inequality)
+          yhat <- exp(yhat)
+          
+        } else if (transformations[t] %in% c("box.cox", "boxcox_naive")) {
+          
+          # extracting lambda and back-transforming with box-cox
+          lambda <- iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$lambdaopt
+          yhat_bc <- yhat * lambda + 1
+          yhat_bc <- pmax(yhat_bc, 1e-6)
+          yhat    <- yhat_bc^(1 / lambda)
+          
+        }
+        
+        # calculating MSE with original or back-transformed yhat
+        iter_JcAIC[[dgp_settings[j]]][[transformations[t]]]$MSE <- mean((test_pop$y - yhat)^2)
+      }
     }
     
     # tracking process

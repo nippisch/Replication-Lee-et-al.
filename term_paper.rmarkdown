@@ -339,7 +339,7 @@ big_lambdas <- res_df |>
   
 ```
 
-For the Box-Cox and Log DGP, the $\hat{\lambda}$ is very close to the expected $-0.5$ and $1$, respectively. In the Normal DGP's, however, more heterogeneity is visible: Even though the median in all four cases is approximately the expected $1$, both methods show a considerable variation. In the case of Box-Cox (Optimal) and the Normal (High) setup, some outliers to the top are visible. Those outliers are `{r} nrow(big_lambdas)` cases in which $\hat{\lambda}$ was estimated to be `{r} big_lambdas[1, "opt_lambda"]`. The fact, that all of those $\hat{\lambda}$'s have the same value is likely due to the fact that the possible range of the parameter was set to $\lambda \in [-2, 2]$ and acts as the upper boundary.
+For the Box-Cox and Log DGP, the $\hat{\lambda}$ is very close to the expected $-0.5$ and $1$, respectively. In the Normal DGP's, however, more heterogeneity is visible: Even though the median in all four cases is approximately the expected $1$, both methods show a considerable variation. In the case of Box-Cox (Optimal) and the Normal (High) setup, some outliers to the top are visible. Those outliers are `r .QuartoInlineRender(nrow(big_lambdas))` cases in which $\hat{\lambda}$ was estimated to be `r .QuartoInlineRender(big_lambdas[1, "opt_lambda"])`. The fact, that all of those $\hat{\lambda}$'s have the same value is likely due to the fact that the possible range of the parameter was set to $\lambda \in [-2, 2]$ and acts as the upper boundary.
 
 Interestingly, those deviations to the top happened to this extent only in the setup, which can be seen as the most optimal for a linear mixed model: A normally distributed dependent variable with low variances for $\varepsilon$ and $u$. One reason for this deviation might be that in this particular setup, the normal distribution is sometimes slightly left-skewed. The left graph in @fig-densities_path, however, shows that even though a considerable amount of too high estimated $\hat{\lambda}$'s is for the most extreme skewed densities, but the picture is not as clear as expected.
 
@@ -1243,3 +1243,4 @@ ggarrange(plot_jcaic_lambda_interval, plot_loglik_lambda_interval, plot_jacobi_l
 {{< pagebreak >}}
 
 # References
+

@@ -22,7 +22,7 @@ JcAIC <- function(lmefit, domain, trans = "no", lambdaopt = NA, m = NA,
                                      interval = interval)
     }
     
-    # cat(paste0("Optimal lambda: ", lambdaopt))
+    cat(paste0("\nOptimal lambda: ", lambdaopt, ", formula = ", fixedy))
     
     y <- lmefit0$data[[y_col]]
     
@@ -184,7 +184,10 @@ JcAIC <- function(lmefit, domain, trans = "no", lambdaopt = NA, m = NA,
                    JcAIC = as.numeric(JcAIC),
                    trans = trans,
                    logJacobian = as.numeric(logJacobian),
-                   lambdaopt = lambdaopt) 
+                   lambdaopt = lambdaopt,
+                   lmefit = lmefit) 
+  
+  #cat(paste0("LogLikelihood: ", clogLik, ", Jacoabian: ", logJacobian, ", BC: ", bootBC, "\n"))
 }
 
 ################################################################################
@@ -374,7 +377,7 @@ stepJcAIC <- function(object, scope = NULL, m = NA, y_col,
   
   if (trace == TRUE) {
     cat("Start: JcAIC", " = ", format(round(JcAIC, 2)), "\n", 
-        cut.string(deparse(fit$fixed)), "\n\n", sep = "")
+        cut.string(deparse(fit$fixed)), "\n\n", sep = "", "\nlambda: ", lambdaopt)
     flush.console()
   }
   models[[nm]] <- list(df.resid = n - edf, 
@@ -447,7 +450,7 @@ stepJcAIC <- function(object, scope = NULL, m = NA, y_col,
     
     if (trace == TRUE) {
       cat("Start: JcAIC", " = ", format(round(JcAIC, 2)), "\n", 
-          cut.string(deparse(fit$fixed)), "\n\n", sep = "")
+          cut.string(deparse(fit$fixed)), "\n\n", sep = "", "\nlambda: ", lambdaopt)
       flush.console()
     }
     if (JcAIC >= infcriteria + 1e-07) 

@@ -1,5 +1,5 @@
 ################################################################################
-######## Simulation Study for further exploration ##############################
+######## Exact Replication Lee et al. ##########################################
 ######## Author: Niklas Ippisch ################################################
 ################################################################################
 
@@ -16,15 +16,19 @@ source("Lee_et_al_JcAIC/optimal_parameter.R")
 # definition of global parameters ----------------------------------------------
 
 N <- 10000 # population size
-R <- 6 # monte Carlo iterations
+R <- 500 # monte Carlo iterations
 D <- 50 # number of domains
 B <- 200 # number of bootstrap iterations for JcAIC bias correction term
-interval <- c(-4, 4) # interval for parameter lambda
+interval <- c(-2, 2) # interval for parameter lambda
 base_seed <- 12345 # base seed for reproducibility 
 set.seed(base_seed) # set base seed for reproducibility
-sample_size <- round(runif(D, min = 0, max = 30)) # vector of sample sizes per domain
-dgp_settings <- c("normal_low", "normal_high") # data generating processes
-transformations <- c("box.cox") # possible transformations
+sample_size=c(20, 0, 28, 14, 0, 0, 19, 0, 0, 10, 0, 18, 15, 20, 0, 12, 16, 
+              27, 0, 0, 27, 23, 0, 12, 11, 18, 0, 29, 0, 0, 17, 9, 0, 0, 
+              0, 18, 0, 21, 0, 16, 0, 13, 26, 19, 28, 0, 24, 9, 25, 21)
+#dgp_settings <- c("normal_low", "normal_high", "log", "boxcox") # data generating processes
+dgp_settings <- "normal_high" # data generating processes
+#transformations <- c("no", "log", "boxcox_naive", "box.cox") # possible transformations
+transformations <- "box.cox" # possible transformations
 
 # definition of help functions -------------------------------------------------
 
@@ -238,7 +242,9 @@ run_one_iteration <- function(r, dgp_settings, transformations, N, D, B,
     iter_sample[[dgp_settings[j]]] <- sample_r
     
     for (t in seq_along(transformations)) {
+      
       iter_JcAIC[[dgp_settings[j]]][[transformations[t]]] <- tryCatch(
+        
         stepwise_JcAIC(data = sample_r, B = B, interval = interval, transformation = transformations[t]),
         error = function(e) {
           list(error = conditionMessage(e),
