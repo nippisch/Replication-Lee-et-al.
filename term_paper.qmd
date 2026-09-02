@@ -665,6 +665,28 @@ kable(t_agg, col.names = c("DGP", "None", "Log", "Box-Cox (Naive)", "Box-Cox (Op
 
 On the contrary, @tbl-loglik_correct presents the same table again but the models were selected based on having the highest Log-Likelihood. Two things are visible: First, Box-Cox (Optimal) gets selected far less than before; mostly, the Log transformation is selected. Additionally, the percentage of correct models among this selection is considerably higher than when using the $JcAIC$ as an indicator.
 
+Lastly, as @tbl-variables shows, varies the consistency of the variables considerably. Among the wrongly identified models, $x_1$ is almost always included in the model. Both $x_2$ and $x_3$ are selected moderately often by Box-Cox (Optimal) and Log. Against the above specified hypothesis, however, does $z_2$ not occur more often in the final models than $z_1$. Interestingly, even though Box-Cox (Optimal) and Log select both $x_2$ and $x_3$ more precisely, they also contain $z_1$ and $z_2$ more often.
+
+```{r}
+#| echo: FALSE
+#| warning: FALSE
+#| label: tbl-variables
+#| tbl-cap: "Percentage of wrongly identified models containing the respective variables."
+
+t_variables <- res_df |> 
+  mutate(Correct = if_else(x1 == 1 & x2 == 1 & x3 == 1 & z1 == 0 & z2 == 0, "Yes", "No")) |> 
+    filter(!is.na(Correct) & Correct == "No") |> 
+  group_by(Transformation) |> 
+  summarise(x1 = round(mean(x1, na.rm = TRUE), 2),
+            x2 = round(mean(x2, na.rm = TRUE), 2),
+            x3 = round(mean(x3, na.rm = TRUE), 2),
+            z1 = round(mean(z1, na.rm = TRUE), 2),
+            z2 = round(mean(z2, na.rm = TRUE), 2),
+            n = n())
+kable(t_variables)
+```
+
+
 ## RMSE
 
 As @fig-mse illustrates, varies the RMSE behavior considerably. Overall, the RMSE is far higher in the Box-Cox and Log setting compared to the normal DGP's. In the two normal settings the four models behave approximately similar in terms of median RMSE, however, it is visible that the range of possible RMSE's is considerably bigger for the Box-Cox (Optimal) method. The same pattern is not visible in the Log and Box-Cox setting. In the former, the Box-Cox approaches and the Log method perform approximately equal, whereas applying no transformation yields a higher RMSE. In the Box-Cox setting, however, both Box-Cox Methods show a far bigger RMSE than the Log method and applying no transformation, even though both methods assume a wrong distribution of $y$.
